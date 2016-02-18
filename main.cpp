@@ -2,7 +2,7 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Menu_Item.H>
-
+static void cb_open(Fl_widget *w, void *)
 int main(int argc, char **argv) {
     Fl::scheme("gtk+");
     Fl_Window *window = new Fl_Window(600, 360);
@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
     Fl_Menu_Item menuItems[]=
     {
         {"File",0,0,0,FL_SUBMENU|FL_MENU_DIVIDER},
-        {"Open",FL_CTRL+'o',0,0,0},
+        {"Open",FL_CTRL+'o',cb_open,0,0},
         {"Save Contour",FL_CTRL+'c',0,0,0},
         {"Save Mask",FL_CTRL+'m',0,0,0},
         {0},
