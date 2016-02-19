@@ -4,18 +4,24 @@
 #include <FL/Fl_Menu_Item.H>
 #include <FL/fl_ask.h>
 #include <FL/Fl_File_Chooser.H>
-void cb_open(Fl_Menu_ *w, void *)
+#include <fstream>
+
+void cb_open(Fl_Widget *w, void *)
 {
-    // Fl_Window *window=new Fl_Window(300,180,"open");
-    // window->show();
-    // window->end();
-    // return;
-    
+    ifstream f,fb,test;
+    Fl_File_Chooser chooser(".","*",0,"Choose File");
+    chooser.show();
+    while(chooser.shown())
+    {Fl::wait();}
+    if(chooser.value()!=NULL)
+    {
+        
+    }
 }
 int main(int argc, char **argv) {
     Fl::scheme("gtk+");
     Fl_Window *window = new Fl_Window(600, 360);
-    Fl_Menu_Bar *m=new Fl_Menu_Bar(0,0,600,20);
+    Fl_Menu_Bar *m = new Fl_Menu_Bar(0,0,600,20);
     Fl_Menu_Item menuItems[]=
     {
         {"File",0,0,0,FL_SUBMENU|FL_MENU_DIVIDER},
