@@ -13,7 +13,7 @@ int main(){
 	myDoc = new ISDoc();
 
 	myUI->setDocument(myDoc);
-	myDoc->setDocument(myUI);
+	myDoc->setUI(myUI);
 
 	myUI->show();
 

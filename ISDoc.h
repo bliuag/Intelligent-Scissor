@@ -1,8 +1,7 @@
-#ifndef ISUI_H
-#define ISUI_H
+#ifndef ISDoc_H
+#define ISDoc_H
 
-
-#include "ISUI.h"
+#include "bitmap.h"
 
 class ISUI;
 
@@ -12,6 +11,9 @@ public:
 	ISDoc();
 	void setUI(ISUI*);
 	char* getImageName();
+
+	int loadImage(const char* picName);
+	int saveImage(char* picName);
 
 
 	int width,height;
