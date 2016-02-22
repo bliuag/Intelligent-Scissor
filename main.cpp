@@ -5,7 +5,9 @@
 #include <FL/fl_ask.h>
 #include <FL/Fl_File_Chooser.H>
 #include <fstream>
-
+#include "Bitmap.h"
+using namespace std;
+int width,height;
 void cb_open(Fl_Widget *w, void *)
 {
     ifstream f,fb,test;
@@ -15,7 +17,8 @@ void cb_open(Fl_Widget *w, void *)
     {Fl::wait();}
     if(chooser.value()!=NULL)
     {
-        
+        unsigned char* temp=readBMP(chooser.value(),width,height);
+        writeBMP("test",width,height,temp);
     }
 }
 int main(int argc, char **argv) {
