@@ -7,7 +7,6 @@ ISDoc::ISDoc(){
 	bitmap = NULL;
 	imageName[0] = '\0';
 
-
 }
 
 void ISDoc::setUI(ISUI* ui){
@@ -32,7 +31,7 @@ int ISDoc::loadImage(const char* picName){
 	width = w;
 	height = h;
 
-
+	myUI->pic->refresh();
 	return 1;
 }
 

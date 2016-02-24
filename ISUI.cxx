@@ -7,8 +7,10 @@ ISUI::ISUI(){
     mainWindow = new Fl_Window(600,360);
     mainWindow->user_data((void*)(this));
     menuBar = new Fl_Menu_Bar(0,0,600,20);
-
-
+    Fl_Group* group = new Fl_Group(0, 20, 600, 340);
+    pic= new PicView(0,20,600,340,"This is the Picture");
+    //pic->box(FL_DOWN_FRAME);
+    group->end();
     menuBar->copy(menuitems);
 //    Fl_Window *imgWindow = new Fl_Window(400,200);
     // Fl_Box box(5,30,280,206);     // widget that will contain image
@@ -44,6 +46,7 @@ Fl_Menu_Item ISUI::menuitems[]=
 
 void ISUI::setDocument(ISDoc* doc){
     myDoc = doc;
+    pic->myDoc = doc;
 }
 ISDoc* ISUI::getDocument(){
     return myDoc;
@@ -55,7 +58,6 @@ void ISUI::show(){
 
 ISUI* ISUI::whoami(Fl_Menu_* o)   
 {
-    //std::cout<<"breakpoint1"<<std::endl;
     return ( (ISUI*)(o->parent()->user_data()) );//userdata is initialized to store the UI object address
 }
 
@@ -63,13 +65,11 @@ ISUI* ISUI::whoami(Fl_Menu_* o)
 void ISUI::cb_open(Fl_Menu_ *w, void *)
 {
     ISUI *myUI=whoami(w);
-    //std::cout<<"breakpoint2"<<std::endl;
     ISDoc *myDoc;
     if(myUI!=NULL)
     {
         myDoc=myUI->getDocument();
     }
-    //std::cout<<"breakpoint3"<<std::endl;
     Fl_File_Chooser chooser(".","*",0,"Choose File");
     chooser.show();
     while(chooser.shown())
