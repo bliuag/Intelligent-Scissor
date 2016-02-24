@@ -1,10 +1,11 @@
 #include "ISUI.h"
 #include "ISDoc.h"
-
+#include <iostream>
 ISUI::ISUI(){
     Fl::scheme("gtk+");
     // fl_register_images();    
     mainWindow = new Fl_Window(600,360);
+    mainWindow->user_data((void*)(this));
     menuBar = new Fl_Menu_Bar(0,0,600,20);
 
 
@@ -54,13 +55,21 @@ void ISUI::show(){
 
 ISUI* ISUI::whoami(Fl_Menu_* o)   
 {
-    return ( (ISUI*)(o->parent()->user_data()) );
+    //std::cout<<"breakpoint1"<<std::endl;
+    return ( (ISUI*)(o->parent()->user_data()) );//userdata is initialized to store the UI object address
 }
 
 /*=======CALL BACK==========*/
 void ISUI::cb_open(Fl_Menu_ *w, void *)
 {
-    ISDoc *myDoc=whoami(w)->getDocument();
+    ISUI *myUI=whoami(w);
+    //std::cout<<"breakpoint2"<<std::endl;
+    ISDoc *myDoc;
+    if(myUI!=NULL)
+    {
+        myDoc=myUI->getDocument();
+    }
+    //std::cout<<"breakpoint3"<<std::endl;
     Fl_File_Chooser chooser(".","*",0,"Choose File");
     chooser.show();
     while(chooser.shown())
@@ -76,7 +85,7 @@ void ISUI::cb_save_contour(Fl_Menu_ *w, void *)
 {
     ISDoc *myDoc=whoami(w)->getDocument();
 
-    Fl_File_Chooser chooser(".","*",0,"Save File?");
+    Fl_File_Chooser chooser("save.bmp","*",2,"Save File?");//2 means create a new file
     chooser.show();
     while(chooser.shown()){Fl::wait();}
     if (chooser.value() != NULL)
@@ -85,7 +94,10 @@ void ISUI::cb_save_contour(Fl_Menu_ *w, void *)
     }
 }
 void ISUI::cb_save_mask(Fl_Widget *w, void *){}
-void ISUI::cb_quit(Fl_Widget *w, void *){}
+void ISUI::cb_quit(Fl_Widget *w, void *)
+{
+    exit(0);
+}
 
 void ISUI::cb_brush(Fl_Widget *w, void *){}
 void ISUI::cb_scissor(Fl_Widget *w, void *){}
