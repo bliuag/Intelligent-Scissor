@@ -15,6 +15,8 @@ int main(){
 	myUI->setDocument(myDoc);
 	myDoc->setUI(myUI);
 
+	Fl::visual(FL_DOUBLE|FL_INDEX);
+
 	myUI->show();
 
 	return Fl::run();

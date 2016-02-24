@@ -4,13 +4,16 @@
 ISUI::ISUI(){
     Fl::scheme("gtk+");
     // fl_register_images();    
-    mainWindow = new Fl_Window(600,360);
+    mainWindow = new Fl_Double_Window(600,360);
     mainWindow->user_data((void*)(this));
     menuBar = new Fl_Menu_Bar(0,0,600,20);
-    Fl_Group* group = new Fl_Group(0, 20, 600, 340);
+    
     pic= new PicView(0,20,600,340,"This is the Picture");
-    //pic->box(FL_DOWN_FRAME);
-    group->end();
+    pic->box(FL_DOWN_FRAME);
+
+    mainWindow->resizable(pic);
+
+
     menuBar->copy(menuitems);
 //    Fl_Window *imgWindow = new Fl_Window(400,200);
     // Fl_Box box(5,30,280,206);     // widget that will contain image
@@ -76,8 +79,7 @@ void ISUI::cb_open(Fl_Menu_ *w, void *)
     {Fl::wait();}
     if(chooser.value()!=NULL)
     {
-        myDoc->loadImage(chooser.value());
-
+       myDoc->loadImage(chooser.value());
     }
 }
 

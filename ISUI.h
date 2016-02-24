@@ -12,7 +12,9 @@
 //#include <FL/Fl_Shared_Image.H>
 //#include <FL/Fl_BMP_Image.H>
 //#include <FL/Fl_Box.H>
+#include <FL/Fl_Double_Window.H>
 #include "PicView.h"
+#include <FL/Fl_Scroll.H>
 
 class ISDoc;
 
@@ -27,7 +29,7 @@ public:
 	void setDocument(ISDoc*);
 	ISDoc* getDocument();
 
-	Fl_Window* mainWindow;
+	Fl_Double_Window* mainWindow;
 	Fl_Menu_Bar* menuBar;
 	PicView* pic;
 	static Fl_Menu_Item menuitems[];

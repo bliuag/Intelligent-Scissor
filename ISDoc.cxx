@@ -31,6 +31,9 @@ int ISDoc::loadImage(const char* picName){
 	width = w;
 	height = h;
 
+	//myUI->mainWindow->resize(myUI->mainWindow->x(),myUI->mainWindow->y(),width,height+20);
+
+	//myUI->pic->resizeView(width,height);
 	myUI->pic->refresh();
 	return 1;
 }

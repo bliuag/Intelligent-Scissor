@@ -36,16 +36,28 @@ void PicView::draw()
 		int drawWidth, drawHeight;
 		GLvoid* bitstart;
 
-		drawWidth	= min( width, myDoc->width );
-		drawHeight	= min( height, myDoc->height );
+		width=w();
+		height=h();
 
-		bitstart = myDoc->bitmap;
+		Point scrollpos;//=GetScrollPosition();
+		scrollpos.x=scrollpos.y=0;
 
+		drawWidth	= min(width, myDoc->width);
+		drawHeight	= min(height,myDoc->height);
+
+		int startrow = myDoc->height - (scrollpos.y+drawHeight);
+		if(startrow<0)
+			startrow=0;
+		bitstart = myDoc->bitmap+3*((myDoc->width*startrow)+scrollpos.x);
+
+		glRasterPos2i( 0, height - drawHeight );
+		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+		glPixelStorei( GL_UNPACK_ROW_LENGTH, myDoc->width );
 		glDrawBuffer( GL_BACK );
-		glDrawPixels( drawWidth, drawHeight, GL_RGB, GL_UNSIGNED_BYTE, bitstart );
+		glDrawPixels( drawWidth, drawHeight, GL_RGB, GL_UNSIGNED_BYTE, bitstart );//*/
 	}
-/*
-	glFlush();//*/
+
+	glFlush();
 }
 
 void PicView::refresh()
