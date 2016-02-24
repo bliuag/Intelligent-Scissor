@@ -6,12 +6,13 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Menu_Item.H>
-#include <FL/fl_ask.h>
+//#include <FL/fl_ask.h>
 #include <FL/Fl_File_Chooser.H>
-#include <fstream>
-#include <FL/Fl_Shared_Image.H>
-#include <FL/Fl_BMP_Image.H>
-#include <FL/Fl_Box.H>
+//#include <fstream>
+//#include <FL/Fl_Shared_Image.H>
+//#include <FL/Fl_BMP_Image.H>
+//#include <FL/Fl_Box.H>
+#include "PicView.h"
 
 class ISDoc;
 
@@ -28,6 +29,7 @@ public:
 
 	Fl_Window* mainWindow;
 	Fl_Menu_Bar* menuBar;
+	PicView* pic;
 	static Fl_Menu_Item menuitems[];
 
 private:
