@@ -2,13 +2,15 @@
 
 #include "ISUI.h"
 #include "ISDoc.h"
-
+#include <iostream>
+using namespace std;
 ISUI* myUI;
 ISDoc* myDoc;
 
 
 
 int main(){
+
 	myUI = new ISUI();
 	myDoc = new ISDoc();
 

@@ -41,8 +41,8 @@ Fl_Menu_Item ISUI::menuitems[]=
                 {"4x4",     0,(Fl_Callback *)ISUI::cb_4x4,0,0},
                 {"5x5",     0,(Fl_Callback *)ISUI::cb_5x5,0,0},
                 {0},
-            {"Zoom in",     FL_CTRL+'+',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
-            {"Zoom out",    FL_CTRL+'-',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
+            {"Zoom in",     FL_CTRL+'[',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
+            {"Zoom out",    FL_CTRL+']',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
             {0},
         {0}
 };
@@ -107,8 +107,16 @@ void ISUI::cb_3x3(Fl_Widget *w, void *){}
 void ISUI::cb_4x4(Fl_Widget *w, void *){}
 void ISUI::cb_5x5(Fl_Widget *w, void *){}
     
-void ISUI::cb_zoom_in(Fl_Widget *w, void *){}
-void ISUI::cb_zoom_out(Fl_Widget *w, void *){}
+void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
+{
+    ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    myDoc->zoom('+');
+}
+void ISUI::cb_zoom_out(Fl_Menu_ *w, void *)
+{
+    ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    myDoc->zoom('-');
+}
 
 
 

@@ -1,6 +1,7 @@
 #include "PicView.h"
 #include "ISDoc.h"
-
+#include <iostream>
+using namespace std;
 #ifndef WIN32
 #define min(a, b)	( ( (a)<(b) ) ? (a) : (b) )
 #endif
@@ -10,6 +11,7 @@ PicView::PicView(int x,int y,int width,int height,const char* message):
 {
 	this->width=width;
 	this->height=height;
+
 }
 
 void PicView::draw()
@@ -31,8 +33,9 @@ void PicView::draw()
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	if(myDoc->bitmap)
+	if(myDoc->zmap)
 	{
+
 		int drawWidth, drawHeight;
 		GLvoid* bitstart;
 
@@ -42,27 +45,31 @@ void PicView::draw()
 		Point scrollpos;//=GetScrollPosition();
 		scrollpos.x=scrollpos.y=0;
 
-		drawWidth	= min(width, myDoc->width);
-		drawHeight	= min(height,myDoc->height);
+		drawWidth	= min(width, myDoc->zw);
+		drawHeight	= min(height,myDoc->zh);
 
-		int startrow = myDoc->height - (scrollpos.y+drawHeight);
+		int startrow = myDoc->zh - (scrollpos.y+drawHeight);
 		if(startrow<0)
 			startrow=0;
-		bitstart = myDoc->bitmap+3*((myDoc->width*startrow)+scrollpos.x);
+		bitstart = myDoc->zmap+3*((myDoc->zw*startrow)+scrollpos.x);
 
 		glRasterPos2i( 0, height - drawHeight );
 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-		glPixelStorei( GL_UNPACK_ROW_LENGTH, myDoc->width );
+		glPixelStorei( GL_UNPACK_ROW_LENGTH, myDoc->zw );
 		glDrawBuffer( GL_BACK );
 		glDrawPixels( drawWidth, drawHeight, GL_RGB, GL_UNSIGNED_BYTE, bitstart );//*/
-	}
+		//glScalef(4,4,4);
+		
+		}
 
 	glFlush();
 }
 
 void PicView::refresh()
 {
+
 	redraw();
+
 }
 
 void PicView::resizeView(int width,int height)
