@@ -5,6 +5,17 @@
 
 class ISUI;
 
+struct Node
+ {
+ 	unsigned char c1,c2,c3;
+ 	double linkCost[8];
+ 	int state;
+ 	double totalCost;
+ 	Node* preNode;
+ 	int row;
+ 	int col;
+ };
+
 class ISDoc{
 
 public: 
@@ -18,11 +29,14 @@ public:
 	unsigned char*	bitmap;
 	int zw,zh;
 	double z;
-	unsigned char*  zmap;
+	unsigned char*  curmap;
 	void zoom(char inq);
 private:
+	void initializeMatrix();
+	void refreshCurmap();
 	char imageName[256];
 	ISUI* myUI;
+	Node** matrix;
 };
 
 
