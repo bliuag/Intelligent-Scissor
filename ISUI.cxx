@@ -4,13 +4,16 @@
 ISUI::ISUI(){
     Fl::scheme("gtk+");
     // fl_register_images();    
-    mainWindow = new Fl_Window(600,360);
+    mainWindow = new Fl_Double_Window(600,360);
     mainWindow->user_data((void*)(this));
     menuBar = new Fl_Menu_Bar(0,0,600,20);
-    Fl_Group* group = new Fl_Group(0, 20, 600, 340);
+    
     pic= new PicView(0,20,600,340,"This is the Picture");
-    //pic->box(FL_DOWN_FRAME);
-    group->end();
+    pic->box(FL_DOWN_FRAME);
+
+    mainWindow->resizable(pic);
+
+
     menuBar->copy(menuitems);
 //    Fl_Window *imgWindow = new Fl_Window(400,200);
     // Fl_Box box(5,30,280,206);     // widget that will contain image
@@ -38,8 +41,8 @@ Fl_Menu_Item ISUI::menuitems[]=
                 {"4x4",     0,(Fl_Callback *)ISUI::cb_4x4,0,0},
                 {"5x5",     0,(Fl_Callback *)ISUI::cb_5x5,0,0},
                 {0},
-            {"Zoom in",     FL_CTRL+'+',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
-            {"Zoom out",    FL_CTRL+'-',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
+            {"Zoom in",     FL_CTRL+'[',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
+            {"Zoom out",    FL_CTRL+']',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
             {0},
         {0}
 };
@@ -76,8 +79,7 @@ void ISUI::cb_open(Fl_Menu_ *w, void *)
     {Fl::wait();}
     if(chooser.value()!=NULL)
     {
-        myDoc->loadImage(chooser.value());
-
+       myDoc->loadImage(chooser.value());
     }
 }
 
@@ -105,8 +107,16 @@ void ISUI::cb_3x3(Fl_Widget *w, void *){}
 void ISUI::cb_4x4(Fl_Widget *w, void *){}
 void ISUI::cb_5x5(Fl_Widget *w, void *){}
     
-void ISUI::cb_zoom_in(Fl_Widget *w, void *){}
-void ISUI::cb_zoom_out(Fl_Widget *w, void *){}
+void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
+{
+    ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    myDoc->zoom('+');
+}
+void ISUI::cb_zoom_out(Fl_Menu_ *w, void *)
+{
+    ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    myDoc->zoom('-');
+}
 
 
 
