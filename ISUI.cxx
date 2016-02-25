@@ -1,6 +1,7 @@
 #include "ISUI.h"
 #include "ISDoc.h"
 #include <iostream>
+using namespace std;
 ISUI::ISUI(){
     Fl::scheme("gtk+");
     // fl_register_images();    
@@ -37,9 +38,10 @@ Fl_Menu_Item ISUI::menuitems[]=
             {0},
         {"View",FL_CTRL+'i',0,0,FL_MENU_DIVIDER|FL_SUBMENU},
             {"Blur",        FL_CTRL+'r',0,0,FL_SUBMENU},
-                {"3x3",     0,(Fl_Callback *)ISUI::cb_3x3,0,0},
-                {"4x4",     0,(Fl_Callback *)ISUI::cb_4x4,0,0},
-                {"5x5",     0,(Fl_Callback *)ISUI::cb_5x5,0,0},
+                {"No blurring",     0,(Fl_Callback *)ISUI::cb_3x3,0,FL_MENU_RADIO},
+                {"3x3",     0,(Fl_Callback *)ISUI::cb_3x3,0,FL_MENU_RADIO},
+                {"4x4",     0,(Fl_Callback *)ISUI::cb_4x4,0,FL_MENU_RADIO},
+                {"5x5",     0,(Fl_Callback *)ISUI::cb_5x5,0,FL_MENU_RADIO},
                 {0},
             {"Zoom in",     FL_CTRL+'[',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
             {"Zoom out",    FL_CTRL+']',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
@@ -78,9 +80,10 @@ void ISUI::cb_open(Fl_Menu_ *w, void *)
     while(chooser.shown())
     {Fl::wait();}
     if(chooser.value()!=NULL)
-    {
+    {cout<<"breakpoint1"<<endl;
        myDoc->loadImage(chooser.value());
     }
+    
 }
 
 void ISUI::cb_save_contour(Fl_Menu_ *w, void *)

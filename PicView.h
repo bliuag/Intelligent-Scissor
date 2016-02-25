@@ -19,7 +19,6 @@ public:
 
 	void draw();
 	void refresh();
-
 	void resizeView(int width,int height);
 
 	ISDoc *myDoc;

@@ -16,7 +16,8 @@ PicView::PicView(int x,int y,int width,int height,const char* message):
 
 void PicView::draw()
 {
-	
+
+	cout << "ww" << endl;
 	if(!valid())
 	{
 		glClearColor(0.7f, 0.7f, 0.7f, 1.0);
@@ -33,7 +34,7 @@ void PicView::draw()
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	if(myDoc->zmap)
+	if(myDoc->curmap)
 	{
 
 		int drawWidth, drawHeight;
@@ -51,8 +52,8 @@ void PicView::draw()
 		int startrow = myDoc->zh - (scrollpos.y+drawHeight);
 		if(startrow<0)
 			startrow=0;
-		bitstart = myDoc->zmap+3*((myDoc->zw*startrow)+scrollpos.x);
-
+		bitstart = myDoc->curmap+3*((myDoc->zw*startrow)+scrollpos.x);
+		
 		glRasterPos2i( 0, height - drawHeight );
 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 		glPixelStorei( GL_UNPACK_ROW_LENGTH, myDoc->zw );
@@ -71,6 +72,7 @@ void PicView::refresh()
 	redraw();
 
 }
+
 
 void PicView::resizeView(int width,int height)
 {
