@@ -9,6 +9,10 @@ struct Node
  {
  	unsigned char c1,c2,c3;
  	double linkCost[8];
+ 	double DR[8];
+ 	double DG[8];
+ 	double DB[8];
+ 	double D[8];
  	int state;
  	double totalCost;
  	Node* preNode;
@@ -31,12 +35,17 @@ public:
 	double z;
 	unsigned char*  curmap;
 	void zoom(char inq);
+
 private:
 	void initializeMatrix();
 	void refreshCurmap();
+	void calcLinkCost();
+
 	char imageName[256];
 	ISUI* myUI;
-	Node** matrix;
+	Node** nodeMatrix;
+
+
 };
 
 

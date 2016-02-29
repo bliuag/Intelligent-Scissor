@@ -10,16 +10,9 @@ ISUI::ISUI(){
     
     pic= new PicView(0,20,600,340,"This is the Picture");
     pic->box(FL_DOWN_FRAME);
-
     mainWindow->resizable(pic);
-
-
+    
     menuBar->copy(menuitems);
-//    Fl_Window *imgWindow = new Fl_Window(400,200);
-    // Fl_Box box(5,30,280,206);     // widget that will contain image
-    // Fl_BMP_Image bmp("ferry.bmp");
-    // box.image(bmp);                             // attach jpg image to box
-
     mainWindow->end();
 }
 
