@@ -160,7 +160,7 @@ void ISDoc::calcLinkCost(){
 	for (int i=1;i<height-1;i++)
 		for (int j=1;j<width-1;j++)
 			for (int d=0;d<8;d++){
-				nodeMatrix[i][j].linkCost[d] = (maxD - nodeMatrix[i][j].D[d]);
+				nodeMatrix[i][j].linkCost[d] = ( maxD - nodeMatrix[i][j].D[d]);
 				if (d%2==0)
 					nodeMatrix[i][j].linkCost[d] *= 1;
 				else
@@ -205,13 +205,17 @@ void ISDoc::calcCostTree(int row,int col){
 			}
 		}
 	}
-
-	for (int i=1;i<height-1;i++,cout<<endl)
+	cout << "c1" << endl;
+	for (int i=height-2;i>0;i--,cout<<endl)
 		for (int j=1;j<width-1;j++)
 			cout<<(int)nodeMatrix[i][j].c1/32<<' ';
-	cout<<"\n\n\n\n";
-	for (int i=1;i<height-1;i++,cout<<endl)
+
+	for (int i=height-2;i>0;i--,cout<<endl)
 		for (int j=1;j<width-1;j++)
-			cout<<(int)nodeMatrix[i][j].totalCost/750<<' ';
+			cout<<(int)nodeMatrix[i][j].linkCost[1]/2 <<' ';
+	cout<<"\n\n\n\n";
+	for (int i=height-2;i>0;i--,cout<<endl)	
+		for (int j=1;j<width-1;j++)
+			cout<<(int)nodeMatrix[i][j].totalCost/350<<' ';
 }
 

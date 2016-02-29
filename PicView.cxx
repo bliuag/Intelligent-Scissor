@@ -86,7 +86,7 @@ int PicView::handle(int event)
 		cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 		
 		isAnEvent=1;
-		myDoc->calcCostTree(Fl::event_y()/myDoc->z,Fl::event_x()/myDoc->z);
+		myDoc->calcCostTree(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		flush();
 		break;
 
