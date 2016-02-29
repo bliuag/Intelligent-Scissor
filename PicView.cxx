@@ -76,3 +76,25 @@ void PicView::resizeView(int width,int height)
 {
 	resize(x(),y(),width,height);
 }
+
+
+int PicView::handle(int event)
+{
+	int isAnEvent;
+	switch(event){
+	case FL_PUSH:
+		cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
+		
+		isAnEvent=1;
+		myDoc->calcCostTree(Fl::event_y()/myDoc->z,Fl::event_x()/myDoc->z);
+		flush();
+		break;
+
+	default:
+		return 0;
+		break;
+
+	}
+	return true;
+}
+

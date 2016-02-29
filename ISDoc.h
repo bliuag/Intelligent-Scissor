@@ -20,6 +20,7 @@ struct Node
  	int col;
  };
 
+
 class ISDoc{
 
 public: 
@@ -36,10 +37,14 @@ public:
 	unsigned char*  curmap;
 	void zoom(char inq);
 
+	void calcCostTree(int,int);
+
 private:
 	void initializeMatrix();
 	void refreshCurmap();
 	void calcLinkCost();
+	void initStates();
+	
 
 	char imageName[256];
 	ISUI* myUI;

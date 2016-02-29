@@ -6,10 +6,6 @@
 using namespace std;
 ISUI* myUI;
 ISDoc* myDoc;
-// For auxiliary purpose
-	//diagonal:1,3,5,7
-	int dir[8][2]={{1,0},{1,-1},{0,-1},{-1,-1},
-				   {-1,0},{-1,1},{0,1},{1,1}};
 
 
 int main(){
