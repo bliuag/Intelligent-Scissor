@@ -8,7 +8,6 @@ ISUI* myUI;
 ISDoc* myDoc;
 
 
-
 int main(){
 
 	myUI = new ISUI();
