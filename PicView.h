@@ -22,6 +22,8 @@ public:
 
 	void resizeView(int width,int height);
 
+	int handle(int);
+
 	ISDoc *myDoc;
 
 private:
