@@ -7,9 +7,6 @@
 #include <cmath>
 #include <queue>
 
-#define INITIAL 0
-#define ACTIVE 1
-#define EXPANDED 2
 
 using namespace std;
 
@@ -54,6 +51,7 @@ int ISDoc::loadImage(const char* picName){
 	zw=width = w;
 	zh=height = h;
 	z=1.0;
+	mode = WORK_MODE;
 	initializeMatrix();
 	refreshCurmap();
 	myUI->pic->show();
@@ -90,6 +88,32 @@ void ISDoc::zoom(char inq)
 	refreshCurmap();
 }
 
+void ISDoc::pixelNode(){
+	mode = DEBUG_MODE;
+	cout << "changing mode" << endl;
+	cout << "before zw=" << zw << " zh = " << zh << endl;
+	debugMatrix = new Color*[3*height];
+	for (int i=0;i<3*height;i++)
+		debugMatrix[i] = new Color[3*width];
+	// initial the 3*h * 3*w matrix(h&w in original size)
+	Color Black; Black.c1 = Black.c2 = Black.c3 = 0;
+	for (int i=0;i<height;i++)
+		for (int j=0;j<width;j++){
+
+			for (int l1=0;l1<=2;l1++)
+				for (int l2=0;l2<=2;l2++)
+					debugMatrix[i*3+l1][j*3+l2] = Black;
+
+			debugMatrix[i*3+1][j*3+1].c1 = nodeMatrix[i][j].c1;
+			debugMatrix[i*3+1][j*3+1].c2 = nodeMatrix[i][j].c2;
+			debugMatrix[i*3+1][j*3+1].c3 = nodeMatrix[i][j].c3;
+
+		}
+	// z*=3.0; zw*=3.0; zh*=3.0;
+	z=1; zw=width*3; zh=height*3;
+	refreshCurmap();
+}
+
 void ISDoc::initializeMatrix(){
 
 	nodeMatrix = new Node*[height];
@@ -111,14 +135,29 @@ void ISDoc::initializeMatrix(){
 
 void ISDoc::refreshCurmap()
 {
+	cout << "z = " << z << endl;
 	curmap=new unsigned char[zw*zh*3];
-	for(int i=0;i<zh;i++)
-		for(int j=0;j<zw;j++)
-		{
-			curmap[(i*zw+j)*3]=nodeMatrix[int(i/z)][int(j/z)].c1;
-			curmap[(i*zw+j)*3+1]=nodeMatrix[int(i/z)	][int(j/z)].c2;
-			curmap[(i*zw+j)*3+2]=nodeMatrix[int(i/z)][int(j/z)].c3;
-		}
+	if (mode == WORK_MODE){
+		cout << "~~~working mode = work mode" << endl;
+		for(int i=0;i<zh;i++)
+			for(int j=0;j<zw;j++){
+				curmap[(i*zw+j)*3]=nodeMatrix[int(i/z)][int(j/z)].c1;
+				curmap[(i*zw+j)*3+1]=nodeMatrix[int(i/z)][int(j/z)].c2;
+				curmap[(i*zw+j)*3+2]=nodeMatrix[int(i/z)][int(j/z)].c3;
+			}
+		cout << "endl" << endl;
+
+	}else{
+		cout << "~~~working mode = debug mode" << endl;
+		for(int i=0;i<zh;i++)
+			for(int j=0;j<zw;j++){
+				curmap[(i*zw+j)*3]=debugMatrix[int(i/z)][int(j/z)].c1;
+				curmap[(i*zw+j)*3+1]=debugMatrix[int(i/z)][int(j/z)].c2;
+				curmap[(i*zw+j)*3+2]=debugMatrix[int(i/z)][int(j/z)].c3;
+			}
+	}
+	cout << (myUI == NULL) << endl;
+	cout << (myUI->pic == NULL) << endl;
 	myUI->pic->refresh();
 }
 
