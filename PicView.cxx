@@ -11,7 +11,7 @@ PicView::PicView(int x,int y,int width,int height,const char* message):
 {
 	this->width=width;
 	this->height=height;
-
+	contour=false;
 }
 
 void PicView::draw()
@@ -44,15 +44,15 @@ cout<<"test\n";
 		height=h();
 
 		Point scrollpos;//=GetScrollPosition();
-		scrollpos.x=scrollpos.y=0;
+		scrollpos.col=scrollpos.row=0;
 
 		drawWidth	= min(width, myDoc->zw);
 		drawHeight	= min(height,myDoc->zh);
 
-		int startrow = myDoc->zh - (scrollpos.y+drawHeight);
+		int startrow = myDoc->zh - (scrollpos.row+drawHeight);
 		if(startrow<0)
 			startrow=0;
-		bitstart = myDoc->curmap+3*((myDoc->zw*startrow)+scrollpos.x);
+		bitstart = myDoc->curmap+3*((myDoc->zw*startrow)+scrollpos.col);
 
 		glRasterPos2i( 0, height - drawHeight );
 		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
@@ -68,9 +68,6 @@ cout<<"test\n";
 
 void PicView::refresh()
 {
-	cout<<"breakpoint\n";
-
-	//redraw();
 	flush();
 }
 
@@ -82,12 +79,19 @@ int PicView::handle(int event)
 	switch(event){
 	case FL_PUSH:
 		cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
-		
-		isAnEvent=1;
 		myDoc->calcCostTree(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+		contour=true;
 		flush();
 		break;
-
+	case FL_MOVE:
+		if(contour)
+		{
+			cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
+			myDoc->drawContour(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+		}
+		break;
+	case FL_ENTER:
+		return true;
 	default:
 		return 0;
 		break;

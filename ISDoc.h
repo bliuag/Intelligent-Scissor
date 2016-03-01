@@ -14,6 +14,11 @@ struct Color{
 	unsigned char c1,c2,c3;
 };
 
+struct Point
+{
+	int row;
+	int col;
+};
 
 struct Node
  {
@@ -28,6 +33,7 @@ struct Node
  	Node* preNode;
  	int row;
  	int col;
+ 	bool drawed;
  };
 
 
@@ -49,9 +55,10 @@ public:
 	void pixelNode();
 
 	void calcCostTree(int,int);
-
-		bool mode;
-
+	Point* seed;
+	Point* last;
+	bool mode;
+	void drawContour(int,int);
 private:
 	void initializeMatrix();
 	void refreshCurmap();
@@ -63,6 +70,8 @@ private:
 	ISUI* myUI;
 	Node** nodeMatrix;
 	Color** debugMatrix;
+	Color** drawMatrix;
+
 
 };
 
