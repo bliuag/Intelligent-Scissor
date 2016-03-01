@@ -26,11 +26,7 @@ public:
 private:
 	int width;
 	int height;
+	bool contour;
 };
 
-struct Point
-{
-	int x;
-	int y;
-};
 #endif
