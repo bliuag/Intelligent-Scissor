@@ -129,8 +129,8 @@ void ISUI::cb_Pixel_Node(Fl_Menu_ *w, void *){
     myDoc->pixelNode();
 }
 void ISUI::cb_Cost_Graph(Fl_Menu_ *w, void *){
-    // ISDoc *myDoc=whoami(w)->getDocument();
-    //myDoc->costGraph();
+    ISDoc *myDoc=whoami(w)->getDocument();
+    myDoc->costGraph();
 }
 void ISUI::cb_Path_Tree(Fl_Menu_ *w, void *){}
 void ISUI::cb_Min_Path(Fl_Menu_ *w, void *){}

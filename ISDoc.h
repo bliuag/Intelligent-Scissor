@@ -53,6 +53,7 @@ public:
 	unsigned char*  curmap;
 	void zoom(char inq);
 	void pixelNode();
+	void costGraph();
 
 	void calcCostTree(int,int);
 	Point* seed;
@@ -71,6 +72,7 @@ private:
 	Node** nodeMatrix;
 	Color** debugMatrix;
 	Color** drawMatrix;
+	double maxD;
 
 
 };
