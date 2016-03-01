@@ -52,6 +52,11 @@ private:
 	static void cb_zoom_in(Fl_Menu_ *w, void *);
 	static void cb_zoom_out(Fl_Menu_ *w, void *);
 
+	static void cb_Pixel_Node(Fl_Menu_ *w, void *);
+	static void cb_Cost_Graph(Fl_Menu_ *w, void *);
+	static void cb_Path_Tree(Fl_Menu_ *w, void *);
+	static void cb_Min_Path(Fl_Menu_ *w, void *);
+
 	ISDoc* myDoc;
 
 };

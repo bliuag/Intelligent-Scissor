@@ -2,8 +2,18 @@
 #define ISDoc_H
 
 #include "bitmap.h"
+#define INITIAL 0
+#define ACTIVE 1
+#define EXPANDED 2
+#define WORK_MODE 0
+#define DEBUG_MODE 1
 
 class ISUI;
+
+struct Color{
+	unsigned char c1,c2,c3;
+};
+
 
 struct Node
  {
@@ -36,8 +46,11 @@ public:
 	double z;
 	unsigned char*  curmap;
 	void zoom(char inq);
+	void pixelNode();
 
 	void calcCostTree(int,int);
+
+		bool mode;
 
 private:
 	void initializeMatrix();
@@ -49,7 +62,7 @@ private:
 	char imageName[256];
 	ISUI* myUI;
 	Node** nodeMatrix;
-
+	Color** debugMatrix;
 
 };
 

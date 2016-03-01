@@ -38,6 +38,12 @@ Fl_Menu_Item ISUI::menuitems[]=
             {"Zoom in",     FL_CTRL+'[',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
             {"Zoom out",    FL_CTRL+']',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
             {0},
+        {"Debug Mode",FL_CTRL+'d',0,0,FL_MENU_DIVIDER|FL_SUBMENU},
+            {"Pixel Node",  0,(Fl_Callback *)ISUI::cb_Pixel_Node,0,FL_MENU_RADIO},
+            {"Cost Graph",  0,(Fl_Callback *)ISUI::cb_Cost_Graph,0,FL_MENU_RADIO},
+            {"Path Tree",   0,(Fl_Callback *)ISUI::cb_Path_Tree,0,FL_MENU_RADIO},
+            {"Min Path",    0,(Fl_Callback *)ISUI::cb_Min_Path,0,FL_MENU_RADIO},
+            {0},
         {0}
 };
 
@@ -105,13 +111,30 @@ void ISUI::cb_5x5(Fl_Widget *w, void *){}
 void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
 {
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    if (myDoc->mode == DEBUG_MODE) return;
     myDoc->zoom('+');
 }
 void ISUI::cb_zoom_out(Fl_Menu_ *w, void *)
 {
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    if (myDoc->mode == DEBUG_MODE) return;
     myDoc->zoom('-');
 }
+
+
+void ISUI::cb_Pixel_Node(Fl_Menu_ *w, void *){
+    ISDoc *myDoc=whoami(w)->getDocument();
+    myDoc->pixelNode();
+}
+void ISUI::cb_Cost_Graph(Fl_Menu_ *w, void *){
+    // ISDoc *myDoc=whoami(w)->getDocument();
+    //myDoc->costGraph();
+}
+void ISUI::cb_Path_Tree(Fl_Menu_ *w, void *){}
+void ISUI::cb_Min_Path(Fl_Menu_ *w, void *){}
+
+
+
 
 
 
