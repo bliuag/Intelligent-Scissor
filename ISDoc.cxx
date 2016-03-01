@@ -119,6 +119,33 @@ void ISDoc::pixelNode(){
 	refreshCurmap();
 }
 
+void ISDoc::costGraph(){
+	mode = DEBUG_MODE;
+	cout << "changing mode" << endl;
+	debugMatrix = new Color*[3*height];
+	for (int i=0;i<3*height;i++)
+		debugMatrix[i] = new Color[3*width];
+	// initial the 3*h * 3*w matrix(h&w in original size)
+	for (int i=0;i<height;i++)
+		for (int j=0;j<width;j++){
+
+			for (int d=0;d<8;d++){
+				int grey = 255-(int)nodeMatrix[i][j].linkCost[d]*255/(maxD*sqrt(2));
+				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c1=grey;
+				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c2=grey;
+				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c3=grey;
+			}
+
+			debugMatrix[i*3+1][j*3+1].c1 = nodeMatrix[i][j].c1;
+			debugMatrix[i*3+1][j*3+1].c2 = nodeMatrix[i][j].c2;
+			debugMatrix[i*3+1][j*3+1].c3 = nodeMatrix[i][j].c3;
+
+		}
+	z=1; zw=width*3; zh=height*3;
+	refreshCurmap();
+}
+
+
 void ISDoc::initializeMatrix(){
 
 	nodeMatrix = new Node*[height];
@@ -181,15 +208,13 @@ void ISDoc::refreshCurmap()
 				curmap[(i*zw+j)*3+2]=debugMatrix[int(i/z)][int(j/z)].c3;
 			}
 	}
-	cout << (myUI == NULL) << endl;
-	cout << (myUI->pic == NULL) << endl;
 	myUI->pic->refresh();
 }
 
 void ISDoc::calcLinkCost(){
 	// Not calcute the out round of the pixels. To be handled later.
 
-	double maxD=0;
+	maxD = 0.0;
 	for (int i=1;i<height-1;i++)
 		for (int j=1;j<width-1;j++)
 			for (int d=0;d<8;d++){

@@ -75,15 +75,16 @@ void PicView::refresh()
 
 int PicView::handle(int event)
 {
-	int isAnEvent;
 	switch(event){
 	case FL_PUSH:
 		cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
+		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
 		myDoc->calcCostTree(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		contour=true;
 		flush();
 		break;
 	case FL_MOVE:
+		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
 		if(contour)
 		{
 			cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
