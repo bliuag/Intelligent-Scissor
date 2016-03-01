@@ -20,12 +20,9 @@ public:
 	void draw();
 	void refresh();
 
-	void resizeView(int width,int height);
-
-	int handle(int);
-
 	ISDoc *myDoc;
 
+	int handle(int event);
 private:
 	int width;
 	int height;

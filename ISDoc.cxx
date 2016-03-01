@@ -84,6 +84,7 @@ void ISDoc::zoom(char inq)
 		z*=0.5;
 	zw=z*width;
 	zh=z*height;
+	cout<<"bp1\n";
 	refreshCurmap();
 }
 
