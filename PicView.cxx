@@ -28,14 +28,15 @@ void PicView::draw()
 		// out paint strokes 
 		glReadBuffer( GL_FRONT );
 		ortho();
+		valid(1);
 
 	}
 
 	glClear( GL_COLOR_BUFFER_BIT );
-
+cout<<"test\n";
 	if(myDoc->curmap)
 	{
-
+		
 		int drawWidth, drawHeight;
 		GLvoid* bitstart;
 
@@ -67,12 +68,35 @@ void PicView::draw()
 
 void PicView::refresh()
 {
+	cout<<"breakpoint\n";
 
-	redraw();
-
+	//redraw();
+	flush();
 }
 
-void PicView::resizeView(int width,int height)
-{
-	resize(x(),y(),width,height);
-}
+
+ int PicView::handle(int event)
+ {
+// 	switch(event)
+// 	{
+// 		case FL_PUSH:
+// 			cout<<"x: "<<Fl::event_x()<<" y: "<<Fl::event_y()<<"\n";
+// 			return true;
+// 	}
+// 	return false;
+ 	switch(event)
+ 	{
+ 		case FL_PUSH:
+			cout<<"x: "<<Fl::event_x()<<" y: "<<Fl::event_y()<<"\n";
+			redraw();
+			return true;
+ 		default:
+ 			return false;
+ 	}
+ }
+
+
+
+
+
+

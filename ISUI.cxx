@@ -1,6 +1,7 @@
 #include "ISUI.h"
 #include "ISDoc.h"
 #include <iostream>
+using namespace std;
 ISUI::ISUI(){
     Fl::scheme("gtk+");
     // fl_register_images();    
@@ -42,8 +43,8 @@ Fl_Menu_Item ISUI::menuitems[]=
                 {"4x4",     0,(Fl_Callback *)ISUI::cb_4x4,0,FL_MENU_RADIO},
                 {"5x5",     0,(Fl_Callback *)ISUI::cb_5x5,0,FL_MENU_RADIO},
                 {0},
-            {"Zoom in",     FL_CTRL+'[',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
-            {"Zoom out",    FL_CTRL+']',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
+            {"Zoom in",     FL_CTRL+'j',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
+            {"Zoom out",    FL_CTRL+'k',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
             {0},
         {0}
 };
@@ -113,6 +114,7 @@ void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
 {
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
     myDoc->zoom('+');
+    cout<<"bp2";
 }
 void ISUI::cb_zoom_out(Fl_Menu_ *w, void *)
 {
