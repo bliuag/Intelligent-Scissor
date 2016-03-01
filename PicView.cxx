@@ -75,11 +75,6 @@ void PicView::refresh()
 }
 
 
-void PicView::resizeView(int width,int height)
-{
-	resize(x(),y(),width,height);
-}
-
 
 int PicView::handle(int event)
 {
@@ -100,5 +95,5 @@ int PicView::handle(int event)
 	}
 	return true;
 }
->>>>>>> origin/master
+
 

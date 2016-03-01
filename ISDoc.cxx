@@ -206,17 +206,17 @@ void ISDoc::calcCostTree(int row,int col){
 			}
 		}
 	}
-	cout << "c1" << endl;
-	for (int i=height-2;i>0;i--,cout<<endl)
-		for (int j=1;j<width-1;j++)
-			cout<<(int)nodeMatrix[i][j].c1/32<<' ';
+	// cout << "c1" << endl;
+	// for (int i=height-2;i>0;i--,cout<<endl)
+	// 	for (int j=1;j<width-1;j++)
+	// 		cout<<(int)nodeMatrix[i][j].c1/32<<' ';
 
-	for (int i=height-2;i>0;i--,cout<<endl)
-		for (int j=1;j<width-1;j++)
-			cout<<(int)nodeMatrix[i][j].linkCost[1]/2 <<' ';
-	cout<<"\n\n\n\n";
-	for (int i=height-2;i>0;i--,cout<<endl)	
-		for (int j=1;j<width-1;j++)
-			cout<<(int)nodeMatrix[i][j].totalCost/350<<' ';
+	// for (int i=height-2;i>0;i--,cout<<endl)
+	// 	for (int j=1;j<width-1;j++)
+	// 		cout<<(int)nodeMatrix[i][j].linkCost[1]/2 <<' ';
+	// cout<<"\n\n\n\n";
+	// for (int i=height-2;i>0;i--,cout<<endl)	
+	// 	for (int j=1;j<width-1;j++)
+	// 		cout<<(int)nodeMatrix[i][j].totalCost/350<<' ';
 }
 
