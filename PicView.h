@@ -20,6 +20,13 @@ public:
 	void draw();
 	void refresh();
 
+<<<<<<< HEAD
+=======
+	void resizeView(int width,int height);
+
+	int handle(int);
+
+>>>>>>> origin/master
 	ISDoc *myDoc;
 
 	int handle(int event);

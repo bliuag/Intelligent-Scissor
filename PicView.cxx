@@ -75,28 +75,30 @@ void PicView::refresh()
 }
 
 
- int PicView::handle(int event)
- {
-// 	switch(event)
-// 	{
-// 		case FL_PUSH:
-// 			cout<<"x: "<<Fl::event_x()<<" y: "<<Fl::event_y()<<"\n";
-// 			return true;
-// 	}
-// 	return false;
- 	switch(event)
- 	{
- 		case FL_PUSH:
-			cout<<"x: "<<Fl::event_x()<<" y: "<<Fl::event_y()<<"\n";
-			redraw();
-			return true;
- 		default:
- 			return false;
- 	}
- }
+void PicView::resizeView(int width,int height)
+{
+	resize(x(),y(),width,height);
+}
 
 
+int PicView::handle(int event)
+{
+	int isAnEvent;
+	switch(event){
+	case FL_PUSH:
+		cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
+		
+		isAnEvent=1;
+		myDoc->calcCostTree(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+		flush();
+		break;
 
+	default:
+		return 0;
+		break;
 
-
+	}
+	return true;
+}
+>>>>>>> origin/master
 
