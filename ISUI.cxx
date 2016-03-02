@@ -7,14 +7,25 @@ ISUI::ISUI(){
     // fl_register_images();    
     mainWindow = new Fl_Double_Window(600,360);
     mainWindow->user_data((void*)(this));
-    menuBar = new Fl_Menu_Bar(0,0,600,20);
-    
-    pic= new PicView(0,20,600,340,"This is the Picture");
-    pic->box(FL_DOWN_FRAME);
+        menuBar = new Fl_Menu_Bar(0,0,600,20);
+        menuBar->copy(menuitems);
+        pic= new PicView(0,20,600,340,"This is the Picture");
+        pic->box(FL_DOWN_FRAME);
     mainWindow->resizable(pic);
-    
-    menuBar->copy(menuitems);
     mainWindow->end();
+
+    numWindow=new Fl_Double_Window(600,30);
+    numWindow->user_data((void*)(this));
+        numSlider=new Fl_Value_Slider(0,0,540,30,"Expanded");
+        numSlider->user_data((void*)(this));
+        numSlider->type(FL_HOR_NICE_SLIDER);
+        numSlider->labelfont(FL_COURIER);
+        numSlider->labelsize(12);
+        numSlider->minimum(1);
+        numSlider->step(1);
+        numSlider->align(FL_ALIGN_RIGHT);
+        numSlider->callback(cb_numChange);
+    numWindow->end();
 }
 
 Fl_Menu_Item ISUI::menuitems[]=
@@ -69,7 +80,7 @@ void ISUI::show(){
     mainWindow->show();
 }
 
-ISUI* ISUI::whoami(Fl_Menu_* o)   
+ISUI* ISUI::whoami(Fl_Widget* o)   
 {
     return ( (ISUI*)(o->parent()->user_data()) );//userdata is initialized to store the UI object address
 }
@@ -172,21 +183,24 @@ void ISUI::cb_Cost_Graph(Fl_Menu_ *w, void *){
     myDoc->costGraph();
 }
 void ISUI::cb_Path_Tree(Fl_Menu_ *w, void *){
-    int expanded;
     ISDoc *myDoc=whoami(w)->getDocument();
     if (myDoc==NULL) return;
     if (myDoc->seed==NULL) return;
 
-    //open window which returns a number
-    //while (window is open)...
-    // cout << "Please input the expanded number:";
-    // cin >> expanded;
-    expanded = 4000;
-    myDoc->pathTree(myDoc->seed->row,myDoc->seed->col,expanded);
+    whoami(w)->numSlider->maximum((myDoc->height-2)*(myDoc->width-2));
+    whoami(w)->numSlider->value((myDoc->height-2)*(myDoc->width-2));
+    myDoc->pathTree(myDoc->seed->row,myDoc->seed->col,whoami(w)->numSlider->value());
+
+    whoami(w)->numWindow->show();
 
 }
 void ISUI::cb_Min_Path(Fl_Menu_ *w, void *){}
 
+void ISUI::cb_numChange(Fl_Widget *w,void *)
+{
+    ISDoc* myDoc=whoami(w)->getDocument();
+    myDoc->pathTree(myDoc->seed->row,myDoc->seed->col,whoami(w)->numSlider->value());
+}
 
 
 

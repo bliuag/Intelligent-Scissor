@@ -15,6 +15,7 @@
 #include <FL/Fl_Double_Window.H>
 #include "PicView.h"
 #include <FL/Fl_Scroll.H>
+#include <FL/Fl_Value_Slider.H>
 
 class ISDoc;
 
@@ -33,9 +34,11 @@ public:
 	Fl_Menu_Bar* menuBar;
 	PicView* pic;
 	static Fl_Menu_Item menuitems[];
+	Fl_Double_Window* numWindow;
+	Fl_Value_Slider* numSlider;
 
 private:
-	static ISUI* whoami(Fl_Menu_* o);
+	static ISUI* whoami(Fl_Widget* o);
 
 	static void cb_open(Fl_Menu_ *w, void *);
 	static void cb_save_contour(Fl_Menu_ *w, void *);
@@ -63,6 +66,8 @@ private:
 	static void cb_Cost_Graph(Fl_Menu_ *w, void *);
 	static void cb_Path_Tree(Fl_Menu_ *w, void *);
 	static void cb_Min_Path(Fl_Menu_ *w, void *);
+
+	static void cb_numChange(Fl_Widget *w,void *);
 
 	ISDoc* myDoc;
 
