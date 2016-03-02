@@ -14,14 +14,12 @@ struct Color{
 	unsigned char c1,c2,c3;
 };
 
-struct Point
-{
+struct Point{
 	int row;
 	int col;
 };
 
-struct Node
- {
+struct Node{
  	unsigned char c1,c2,c3;
  	double linkCost[8];
  	double DR[8];
@@ -31,6 +29,7 @@ struct Node
  	int state;
  	double totalCost;
  	Node* preNode;
+ 	int preNodeDir;
  	int row;
  	int col;
  	bool drawed;
@@ -59,6 +58,7 @@ public:
 	void pixelNode();
 	void costGraph();
 	void pathTree(int,int,int);
+	void minPath(int,int);
 
 	int calcCostTree(int,int,int);
 	Point* seed;
