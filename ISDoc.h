@@ -51,15 +51,20 @@ public:
 	int zw,zh;
 	double z;
 	unsigned char*  curmap;
+
 	void zoom(char inq);
+	void backToWorkMode();
+	void drawContour(int,int);
+
 	void pixelNode();
 	void costGraph();
+	void pathTree(int,int,int);
 
-	void calcCostTree(int,int);
+	int calcCostTree(int,int,int);
 	Point* seed;
 	Point* last;
 	bool mode;
-	void drawContour(int,int);
+	
 	void undo();
 	void stopContour();
 	void setSeed(int,int);
@@ -75,10 +80,7 @@ private:
 	ISUI* myUI;
 	Node** nodeMatrix;
 	Color** debugMatrix;
-	Color** drawMatrix;
 	double maxD;
-
-
 };
 
 

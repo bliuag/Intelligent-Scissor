@@ -29,7 +29,7 @@ ISDoc::ISDoc(){
 	z=1.0;
 	width=height=0;
 	nodeMatrix=NULL;
-	drawMatrix=debugMatrix=NULL;
+	debugMatrix=NULL;
 	seed=last=NULL;
 }
 
@@ -46,8 +46,7 @@ int ISDoc::loadImage(const char* picName){
 	unsigned char* data;
 	int	w, h;
 
-	if ( (data=readBMP(picName, w, h))==NULL ) 
-	{
+	if ( (data=readBMP(picName, w, h))==NULL ) {
 		fl_alert("Can't load bitmap file");
 		return 0;
 	}
@@ -60,7 +59,7 @@ int ISDoc::loadImage(const char* picName){
 	refreshCurmap();
 	myUI->pic->show();
 	calcLinkCost();
-	calcCostTree(1,1);
+	calcCostTree(1,1,-1);
 	if(seed!=0)delete seed;
 	if(last!=0)delete last;
 	seed=last=NULL;
@@ -85,8 +84,9 @@ int ISDoc::saveImage(char* picName){
 	return 1;
 }
 
-void ISDoc::zoom(char inq)
-{
+// ===================== WORK MODE ====================
+
+void ISDoc::zoom(char inq){
 	if(inq=='+')
 		z*=2;
 	else if(inq=='-')
@@ -95,6 +95,40 @@ void ISDoc::zoom(char inq)
 	zh=z*height;
 	refreshCurmap();
 }
+
+void ISDoc::backToWorkMode(){
+	zw=width;
+	zh=height;
+	z=1.0;
+	mode = WORK_MODE;
+	refreshCurmap();
+	myUI->pic->show();
+}
+
+void ISDoc::drawContour(int row,int col){
+	if(last!=NULL){
+		Node* p=&nodeMatrix[last->row][last->col];
+		while( p->row!=seed->row || p->col!=seed->col){
+			p->drawed=false;
+			p=p->preNode;
+		}
+		last=NULL;//////
+	}
+	if(nodeMatrix[row][col].drawed==false){
+		last=new Point;
+		last->row=row;
+		last->col=col;
+		Node *p=&nodeMatrix[last->row][last->col];
+		while( p->row!=seed->row || p->col!=seed->col ){
+			p->drawed=true;
+			p=p->preNode;
+		}
+	}
+	refreshCurmap();
+}
+// ===================== WORK MODE ====================
+
+// ===================== DEBUG MODE ====================
 
 void ISDoc::pixelNode(){
 	mode = DEBUG_MODE;
@@ -119,6 +153,9 @@ void ISDoc::pixelNode(){
 	// z*=3.0; zw*=3.0; zh*=3.0;
 	z=1; zw=width*3; zh=height*3;
 	refreshCurmap();
+	for (int i=0;i<3*height;i++)
+		delete debugMatrix[i];
+	delete debugMatrix;
 }
 
 void ISDoc::costGraph(){
@@ -145,8 +182,54 @@ void ISDoc::costGraph(){
 		}
 	z=1; zw=width*3; zh=height*3;
 	refreshCurmap();
+
+	for (int i=0;i<3*height;i++)
+		delete debugMatrix[i];
+	delete debugMatrix;
 }
 
+
+void ISDoc::pathTree(int seedr, int seedc, int expand){
+	mode = DEBUG_MODE;
+	cout << "changing mode into pathTree" << endl;
+	debugMatrix = new Color*[3*height];
+	for (int i=0;i<3*height;i++)
+		debugMatrix[i] = new Color[3*width];
+
+	int maxCost = calcCostTree(seedr, seedc, expand);
+
+	Color Black; Black.c1 = Black.c2 = Black.c3 = 0;
+	for (int i=0;i<height;i++)
+		for (int j=0;j<width;j++){
+
+			for (int l1=0;l1<=2;l1++)
+				for (int l2=0;l2<=2;l2++)
+					debugMatrix[i*3+l1][j*3+l2] = Black;
+		
+			for (int d=0;d<8;d++){
+				if (nodeMatrix[i][j].totalCost==-1 || nodeMatrix[i][j].preNode==NULL) break;
+				//if (nodeMatrix[i][j].preNode != &nodeMatrix[i+dir[d][0]][j+dir[d][1]]) break;
+				int yellow = 255-(int)nodeMatrix[i][j].totalCost*255/(maxCost*sqrt(2));
+				
+				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c1=255;
+				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c2=205;
+				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c3=yellow;
+			}
+
+			debugMatrix[i*3+1][j*3+1].c1 = nodeMatrix[i][j].c1;
+			debugMatrix[i*3+1][j*3+1].c2 = nodeMatrix[i][j].c2;
+			debugMatrix[i*3+1][j*3+1].c3 = nodeMatrix[i][j].c3;
+
+		}
+	// z*=3.0; zw*=3.0; zh*=3.0;
+	z=1; zw=width*3; zh=height*3;
+	refreshCurmap();
+	for (int i=0;i<3*height;i++)
+		delete debugMatrix[i];
+	delete debugMatrix;
+}
+
+// ===================== DEBUG MODE ====================
 
 void ISDoc::initializeMatrix(){
 
@@ -166,43 +249,28 @@ void ISDoc::initializeMatrix(){
 			nodeMatrix[i][j].totalCost=-1;
 			nodeMatrix[i][j].drawed=false;
 		}
-
-	drawMatrix= new Color*[height];
-	for (int i=0;i<height;i++)
-		drawMatrix[i]=new Color[width];
-	for(int i=0;i<height;i++)
-		for(int j=0;j<width;j++)
-		{
-			drawMatrix[i][j].c1=nodeMatrix[i][j].c1;
-			drawMatrix[i][j].c2=nodeMatrix[i][j].c2;
-			drawMatrix[i][j].c3=nodeMatrix[i][j].c3;
-		} 
 }
 
-void ISDoc::refreshCurmap()
-{
-	//cout << "z = " << z << endl;
+void ISDoc::refreshCurmap(){
 	curmap=new unsigned char[zw*zh*3];
 	if (mode == WORK_MODE){
-		//cout << "~~~working mode = work mode" << endl;
+		cout << "~~~working mode = work mode" << endl;
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
-				if(nodeMatrix[int(i/z)][int(j/z)].drawed==true)
-				{
+				if(nodeMatrix[int(i/z)][int(j/z)].drawed==true){
 					curmap[(i*zw+j)*3]=255;
 					curmap[(i*zw+j)*3+1]=0;
 					curmap[(i*zw+j)*3+2]=0;
 				}
 				else{
-					curmap[(i*zw+j)*3]=drawMatrix[int(i/z)][int(j/z)].c1;
-					curmap[(i*zw+j)*3+1]=drawMatrix[int(i/z)][int(j/z)].c2;
-					curmap[(i*zw+j)*3+2]=drawMatrix[int(i/z)][int(j/z)].c3;
+					curmap[(i*zw+j)*3]=nodeMatrix[int(i/z)][int(j/z)].c1;
+					curmap[(i*zw+j)*3+1]=nodeMatrix[int(i/z)][int(j/z)].c2;
+					curmap[(i*zw+j)*3+2]=nodeMatrix[int(i/z)][int(j/z)].c3;
 				}
 			}
-		//cout << "endl" << endl;
 
 	}else{
-		//cout << "~~~working mode = debug mode" << endl;
+		cout << "~~~working mode = debug mode" << endl;
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
 				curmap[(i*zw+j)*3]=debugMatrix[int(i/z)][int(j/z)].c1;
@@ -270,18 +338,19 @@ void ISDoc::initStates(){
 		}
 }
 
-void ISDoc::calcCostTree(int row,int col){
-	// for (int i=1;i<height;i++)
-	// 	for (int j=1;j<width;j++)
-	// 		if (nodeMatrix[i][j].drawed)
-	// 			cout << "("<<i<<","<<j<<")  ";
-	
+int ISDoc::calcCostTree(int row,int col,int expand){ //return the max cost within expand number of vertices
 	Node x;
 	int di,dj;
+	int cnt=0,maxCost=0;
+	if (expand == -1) 
+		expand = width*height;
+
 	initStates();
 	cout << "seed: "<<row << " " << col << endl;
+	cnt++;
 	q.push(nodeMatrix[row][col]);
-	nodeMatrix[row][col].state = ACTIVE; nodeMatrix[row][col].totalCost = 0;
+	nodeMatrix[row][col].state = ACTIVE; 
+	nodeMatrix[row][col].totalCost = 0;
 	while (!q.empty()){
 		x=q.top(); q.pop();
 		nodeMatrix[x.row][x.col].state = EXPANDED;
@@ -290,73 +359,34 @@ void ISDoc::calcCostTree(int row,int col){
 			if (di<=0 || dj<=0 || di>=height-1 || dj>=width-1) continue;
 			if (nodeMatrix[di][dj].state ==EXPANDED) continue;
 			//if (nodeMatrix[di][dj].drawed ==true) continue;
-			if (nodeMatrix[di][dj].state == INITIAL){
+			if (nodeMatrix[di][dj].state == INITIAL && cnt<expand){
 				nodeMatrix[di][dj].state = ACTIVE;
 				nodeMatrix[di][dj].preNode = &nodeMatrix[x.row][x.col];
 				nodeMatrix[di][dj].totalCost = x.totalCost + x.linkCost[d];
+				if(nodeMatrix[di][dj].totalCost>maxCost)
+						maxCost = nodeMatrix[di][dj].totalCost;
 				q.push(nodeMatrix[di][dj]);
+				cnt++;
 			}else{
 				if (nodeMatrix[di][dj].totalCost > x.totalCost + x.linkCost[d]){
 					nodeMatrix[di][dj].totalCost = x.totalCost + x.linkCost[d];
+					if(nodeMatrix[di][dj].totalCost>maxCost)
+						maxCost = nodeMatrix[di][dj].totalCost;
 					nodeMatrix[di][dj].preNode = &nodeMatrix[x.row][x.col];
 				}
 			}
 		}
 	}
-	// cout << "c1" << endl;
-	// for (int i=height-2;i>0;i--,cout<<endl)
-	// 	for (int j=1;j<width-1;j++)
-	// 		cout<<(int)nodeMatrix[i][j].c1/32<<' ';
-
-	// for (int i=height-2;i>0;i--,cout<<endl)
-	// 	for (int j=1;j<width-1;j++)
-	// 		cout<<(int)nodeMatrix[i][j].linkCost[1]/2 <<' ';
-	// cout<<"\n\n\n\n";
-	// for (int i=height-2;i>0;i--,cout<<endl)	
-	// 	for (int j=1;j<width-1;j++)
-	// 		cout<<(int)nodeMatrix[i][j].totalCost/350<<' ';
+	return maxCost;
 }
 
-void ISDoc::drawContour(int row,int col)
-{
-	//cout << "drawContour" << endl;
-	if(last!=NULL)
-	{
-		// cout << "last != NULL" << endl;
-		Node* p=&nodeMatrix[last->row][last->col];
-		while( p->row!=seed->row || p->col!=seed->col )
-		{
-			p->drawed=false;
-			p=p->preNode;
-		}
-		last=NULL;///////
-	}
-	if(nodeMatrix[row][col].drawed==false)
-	{
-		//cout << "node.drawed = false" << endl;
-		last=new Point;
-		last->row=row;
-		last->col=col;
-		Node *p=&nodeMatrix[last->row][last->col];
-		while( p->row!=seed->row || p->col!=seed->col )
-		{
-			//cout << p->row << " " << p->col << "draw" << endl;
-			p->drawed=true;
-			p=p->preNode;
-		}
-	}
-	refreshCurmap();
-}
 
-void ISDoc::stopContour()
-{
-	if(seed!=NULL)
-	{
+void ISDoc::stopContour(){
+	if(seed!=NULL){
 		delete seed;
 		seed=NULL;
 	}
-	if(last!=NULL)
-	{
+	if(last!=NULL){
 		delete last;
 		last=NULL;
 	}
@@ -379,19 +409,17 @@ void ISDoc::undo()
 		}
 		last=NULL;
 	}
-	if(seeds.empty())
-	{
+	if(seeds.empty()){
 		cout<<"empty\n";
 		return;
 	}
 	cout<<"***\n";
-	Point* temp=last;
 	last=seed;
 	seed=new Point;
 	(*seed)=seeds.top();
 	seeds.pop();
 	cout<<seed->row<<" "<<seed->col<<endl;
-	calcCostTree(seed->row,seed->col);
+	calcCostTree(seed->row,seed->col,-1);
 	if(last!=NULL)
 	{
 		// cout << "last != NULL" << endl;
@@ -418,7 +446,7 @@ void ISDoc::setSeed(int row,int col)
 	seed=new Point;
 	seed->row=row;
 	seed->col=col;
-	calcCostTree(seed->row,seed->col);
+	calcCostTree(seed->row,seed->col,-1);
 }
 
 void ISDoc::closeContour()

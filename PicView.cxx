@@ -33,7 +33,6 @@ void PicView::draw()
 	}
 
 	glClear( GL_COLOR_BUFFER_BIT );
-// cout<<"test\n";
 	if(myDoc->curmap)
 	{
 		
@@ -94,14 +93,14 @@ int PicView::handle(int event)
 	case FL_PUSH:
 		//cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
+		if (myDoc->mode!=WORK_MODE) break;
 		myDoc->setSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		contour=true;
 		flush();
 		break;
 	case FL_MOVE:
 		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
-		if(contour)
-		{
+		if(contour && myDoc->mode==WORK_MODE){
 			//cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 			myDoc->drawContour(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		}
