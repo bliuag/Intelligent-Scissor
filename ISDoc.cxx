@@ -212,7 +212,7 @@ void ISDoc::pathTree(int seedr, int seedc, int expand){
 				int yellow = 255-(int)nodeMatrix[i][j].totalCost*255/(maxCost*sqrt(2));
 				
 				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c1=255;
-				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c2=205;
+				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c2=255;
 				debugMatrix[i*3+dir[d][0]+1][j*3+dir[d][1]+1].c3=yellow;
 			}
 
