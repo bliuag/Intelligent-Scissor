@@ -39,6 +39,11 @@ Fl_Menu_Item ISUI::menuitems[]=
             {"Zoom in",     FL_CTRL+'j',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
             {"Zoom out",    FL_CTRL+'k',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
             {0},
+        {"Action",0,0,0,FL_MENU_DIVIDER|FL_SUBMENU},
+            {"Finish Contour",'.',(Fl_Callback *)ISUI::cb_finish,0,0},
+            {"Finish closed Contour",FL_CTRL+'.',(Fl_Callback *)ISUI::cb_finishClosed,0,0},
+            {"Undo",FL_CTRL+'z',(Fl_Callback *)ISUI::cb_undo,0,0},
+            {0},
         {"Debug Mode",FL_CTRL+'d',0,0,FL_MENU_DIVIDER|FL_SUBMENU},
             {"Pixel Node",  0,(Fl_Callback *)ISUI::cb_Pixel_Node,0,FL_MENU_RADIO},
             {"Cost Graph",  0,(Fl_Callback *)ISUI::cb_Cost_Graph,0,FL_MENU_RADIO},
@@ -123,6 +128,21 @@ void ISUI::cb_zoom_out(Fl_Menu_ *w, void *)
     myDoc->zoom('-');
 }
 
+void ISUI::cb_finish(Fl_Menu_ *w, void *)
+{
+    whoami(w)->pic->stopContour();
+    //cout<<whoami(w)->pic->contour<<endl;
+    //exit(0);
+}
+void ISUI::cb_finishClosed(Fl_Menu_ *w, void *)
+{
+    whoami(w)->getDocument()->closeContour();
+}
+
+void ISUI::cb_undo(Fl_Menu_ *w,void *)
+{
+    whoami(w)->getDocument()->undo();
+}
 
 void ISUI::cb_Pixel_Node(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();

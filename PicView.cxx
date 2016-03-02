@@ -33,7 +33,7 @@ void PicView::draw()
 	}
 
 	glClear( GL_COLOR_BUFFER_BIT );
-cout<<"test\n";
+// cout<<"test\n";
 	if(myDoc->curmap)
 	{
 		
@@ -72,14 +72,29 @@ void PicView::refresh()
 }
 
 
+void PicView::stopContour()
+{
+	contour=false;
+	// if(myDoc->seed!=NULL)
+	// {
+	// 	delete myDoc->seed;
+	// 	myDoc->seed=NULL;
+	// }
+	// if(myDoc->last!=NULL)
+	// {
+	// 	delete myDoc->last;
+	// 	myDoc->last=NULL;
+	// }
+	myDoc->stopContour();
+}
 
 int PicView::handle(int event)
 {
 	switch(event){
 	case FL_PUSH:
-		cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
+		//cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
-		myDoc->calcCostTree(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+		myDoc->setSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		contour=true;
 		flush();
 		break;
@@ -87,7 +102,7 @@ int PicView::handle(int event)
 		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
 		if(contour)
 		{
-			cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
+			//cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 			myDoc->drawContour(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		}
 		break;
