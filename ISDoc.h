@@ -60,6 +60,10 @@ public:
 	Point* last;
 	bool mode;
 	void drawContour(int,int);
+	void undo();
+	void stopContour();
+	void setSeed(int,int);
+	void closeContour();
 private:
 	void initializeMatrix();
 	void refreshCurmap();
