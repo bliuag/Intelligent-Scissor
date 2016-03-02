@@ -44,6 +44,10 @@ Fl_Menu_Item ISUI::menuitems[]=
             {"Finish closed Contour",FL_CTRL+'.',(Fl_Callback *)ISUI::cb_finishClosed,0,0},
             {"Undo",FL_CTRL+'z',(Fl_Callback *)ISUI::cb_undo,0,0},
             {0},
+        {"Work Mode",FL_CTRL+'d',0,0,FL_MENU_DIVIDER|FL_SUBMENU},
+            {"Image Only",  0,(Fl_Callback *)ISUI::cb_Image_Only,0,FL_MENU_RADIO},
+            {"Image with Contour",  0,(Fl_Callback *)ISUI::cb_Image_Contour,0,FL_MENU_RADIO},
+            {0},
         {"Debug Mode",FL_CTRL+'d',0,0,FL_MENU_DIVIDER|FL_SUBMENU},
             {"Pixel Node",  0,(Fl_Callback *)ISUI::cb_Pixel_Node,0,FL_MENU_RADIO},
             {"Cost Graph",  0,(Fl_Callback *)ISUI::cb_Cost_Graph,0,FL_MENU_RADIO},
@@ -117,42 +121,70 @@ void ISUI::cb_5x5(Fl_Widget *w, void *){}
 void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
 {
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    if (myDoc==NULL) return;
     if (myDoc->mode == DEBUG_MODE) return;
     myDoc->zoom('+');
     cout<<"bp2";
 }
-void ISUI::cb_zoom_out(Fl_Menu_ *w, void *)
-{
+void ISUI::cb_zoom_out(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
+    if (myDoc==NULL) return;
     if (myDoc->mode == DEBUG_MODE) return;
     myDoc->zoom('-');
 }
 
-void ISUI::cb_finish(Fl_Menu_ *w, void *)
-{
+void ISUI::cb_Image_Only(Fl_Menu_ *w, void *){
+    ISDoc *myDoc=whoami(w)->getDocument();
+    myDoc->backToWorkMode();
+}
+
+void ISUI::cb_Image_Contour(Fl_Menu_ *w, void *){
+
+}
+
+void ISUI::cb_finish(Fl_Menu_ *w, void *){
     whoami(w)->pic->stopContour();
     //cout<<whoami(w)->pic->contour<<endl;
     //exit(0);
 }
-void ISUI::cb_finishClosed(Fl_Menu_ *w, void *)
-{
-    whoami(w)->getDocument()->closeContour();
+
+void ISUI::cb_finishClosed(Fl_Menu_ *w, void *){
+     ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
+    myDoc->closeContour();
 }
 
-void ISUI::cb_undo(Fl_Menu_ *w,void *)
-{
-    whoami(w)->getDocument()->undo();
+void ISUI::cb_undo(Fl_Menu_ *w,void *){
+    ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
+    myDoc->undo();
+
 }
 
 void ISUI::cb_Pixel_Node(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
     myDoc->pixelNode();
 }
 void ISUI::cb_Cost_Graph(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
     myDoc->costGraph();
 }
-void ISUI::cb_Path_Tree(Fl_Menu_ *w, void *){}
+void ISUI::cb_Path_Tree(Fl_Menu_ *w, void *){
+    int expanded;
+    ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
+    if (myDoc->seed==NULL) return;
+
+    //open window which returns a number
+    //while (window is open)...
+    // cout << "Please input the expanded number:";
+    // cin >> expanded;
+    expanded = 4000;
+    myDoc->pathTree(myDoc->seed->row,myDoc->seed->col,expanded);
+
+}
 void ISUI::cb_Min_Path(Fl_Menu_ *w, void *){}
 
 
