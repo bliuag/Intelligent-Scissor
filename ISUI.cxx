@@ -7,10 +7,11 @@ ISUI::ISUI(){
     // fl_register_images();    
     mainWindow = new Fl_Double_Window(600,360);
     mainWindow->user_data((void*)(this));
-        menuBar = new Fl_Menu_Bar(0,0,600,20);
-        menuBar->copy(menuitems);
-        pic= new PicView(0,20,600,340,"This is the Picture");
-        pic->box(FL_DOWN_FRAME);
+    menuBar = new Fl_Menu_Bar(0,0,600,20);
+    menuBar->copy(menuitems);
+    pic= new PicView(0,20,600,340,"This is the Picture");
+    pic->box(FL_DOWN_FRAME);
+
     mainWindow->resizable(pic);
     mainWindow->end();
 
@@ -26,6 +27,7 @@ ISUI::ISUI(){
         numSlider->align(FL_ALIGN_RIGHT);
         numSlider->callback(cb_numChange);
     numWindow->end();
+
 }
 
 Fl_Menu_Item ISUI::menuitems[]=
@@ -171,7 +173,7 @@ void ISUI::cb_undo(Fl_Menu_ *w,void *){
     myDoc->undo();
 
 }
-
+//=============Debug mode==================
 void ISUI::cb_Pixel_Node(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
     if (myDoc==NULL) return;
@@ -188,20 +190,24 @@ void ISUI::cb_Path_Tree(Fl_Menu_ *w, void *){
     if (myDoc->seed==NULL) return;
 
     whoami(w)->numSlider->maximum((myDoc->height-2)*(myDoc->width-2));
-    whoami(w)->numSlider->value((myDoc->height-2)*(myDoc->width-2));
+    whoami(w)->numSlider->value((myDoc->height-2)*(myDoc->width-2)/4);
     myDoc->pathTree(myDoc->seed->row,myDoc->seed->col,whoami(w)->numSlider->value());
 
     whoami(w)->numWindow->show();
-
 }
-void ISUI::cb_Min_Path(Fl_Menu_ *w, void *){}
 
-void ISUI::cb_numChange(Fl_Widget *w,void *)
-{
+void ISUI::cb_numChange(Fl_Widget *w,void *){
     ISDoc* myDoc=whoami(w)->getDocument();
     myDoc->pathTree(myDoc->seed->row,myDoc->seed->col,whoami(w)->numSlider->value());
 }
 
+void ISUI::cb_Min_Path(Fl_Menu_ *w, void *){
+    ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
+    if (myDoc->seed==NULL) return;
+
+    myDoc->minPath(myDoc->seed->row,myDoc->seed->col);
+}
 
 
 

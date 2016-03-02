@@ -66,9 +66,7 @@ private:
 	static void cb_Cost_Graph(Fl_Menu_ *w, void *);
 	static void cb_Path_Tree(Fl_Menu_ *w, void *);
 	static void cb_Min_Path(Fl_Menu_ *w, void *);
-
 	static void cb_numChange(Fl_Widget *w,void *);
-
 	ISDoc* myDoc;
 
 };
