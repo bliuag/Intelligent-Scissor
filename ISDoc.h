@@ -32,7 +32,7 @@ struct Node{
  	int preNodeDir;
  	int row;
  	int col;
- 	bool drawed;
+ 	int drawed;
  };
 
 
@@ -74,13 +74,13 @@ private:
 	void refreshCurmap();
 	void calcLinkCost();
 	void initStates();
-	
-
 	char imageName[256];
 	ISUI* myUI;
 	Node** nodeMatrix;
 	Color** debugMatrix;
 	double maxD;
+	int curlayer;
+	
 };
 
 
