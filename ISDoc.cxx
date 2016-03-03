@@ -73,7 +73,9 @@ int ISDoc::loadImage(const char* picName){
 		last=NULL;
 	}
 	myUI->pic->contour=false;
-	myUI->pic->compContour=false;
+	//myUI->pic->compContour=false;
+	scissorStatus = false;
+    brushStatus = false;
 	// int l=width*height*3;
 	// curmap=new unsigned char[l];
 	// for(int i=0;i<l;i++)
@@ -543,6 +545,7 @@ void ISDoc::undo(){
 	}
 	if(seeds.empty()){
 		myUI->pic->contour=false;
+		//myUI->pic->compContour=false;
 		refreshCurmap();
 		return;
 	}
@@ -559,7 +562,7 @@ void ISDoc::undo(){
 	cout<<seed->row<<" "<<seed->col<<endl;
 	curlayer--;
 	calcCostTree(seed->row,seed->col,-1);
-	if(last!=NULL)
+	if(last!=NULL)//????
 	{
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col )
@@ -599,7 +602,7 @@ void ISDoc::closeContour(){
 	//seeds.push(*startSeed);
 	drawContour(startSeed->row,startSeed->col);
 	myUI->pic->stopContour();
-	myUI->pic->compContour=true;
+//	myUI->pic->compContour=true;
 }
 
 void ISDoc::setStartSeed(int row,int col)

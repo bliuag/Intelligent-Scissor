@@ -136,8 +136,18 @@ void ISUI::cb_quit(Fl_Widget *w, void *)
     exit(0);
 }
 
-void ISUI::cb_brush(Fl_Widget *w, void *){}
-void ISUI::cb_scissor(Fl_Widget *w, void *){}
+void ISUI::cb_brush(Fl_Widget *w, void *){
+    ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
+    myDoc->scissorStatus = false;
+    myDoc->brushStatus = true;
+}
+void ISUI::cb_scissor(Fl_Widget *w, void *){
+    ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
+    myDoc->scissorStatus = true;
+    myDoc->brushStatus = false;
+}
 void ISUI::cb_NoBlur(Fl_Widget *w,void *){}
 void ISUI::cb_3x3(Fl_Widget *w, void *){}
 void ISUI::cb_4x4(Fl_Widget *w, void *){}

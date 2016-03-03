@@ -37,6 +37,7 @@ public:
 	Fl_Double_Window* numWindow;
 	Fl_Value_Slider* numSlider;
 
+
 private:
 	static ISUI* whoami(Fl_Widget* o);
 

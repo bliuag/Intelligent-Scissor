@@ -75,6 +75,10 @@ public:
 	void setSeed(int,int);
 	void closeContour();
 	void setStartSeed(int,int);
+
+	bool scissorStatus;
+	bool brushStatus;
+	
 private:
 	void initializeMatrix();
 	void refreshCurmap();

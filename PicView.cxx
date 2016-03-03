@@ -94,15 +94,17 @@ int PicView::handle(int event)
 		//cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 		if (Fl::event_y()<=1 || Fl::event_y()/myDoc->z >= myDoc->height-2 || Fl::event_x()<=1 || Fl::event_x()/myDoc->z >= myDoc->width-2) break;
 		if (myDoc->mode!=WORK_MODE) break;
-		if (contour==false)
-			myDoc->setStartSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
-		myDoc->setSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
-		contour=true;
+		if (myDoc->scissorStatus/*  && compContour==false*/){
+			if (contour==false)
+				myDoc->setStartSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+			myDoc->setSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+			contour=true;
+		}
 		flush();
 		break;
 	case FL_MOVE:
 		if (Fl::event_y()<=1 || Fl::event_y()/myDoc->z >= myDoc->height-2 || Fl::event_x()<=1 || Fl::event_x()/myDoc->z >= myDoc->width-2) break;
-		if(contour && myDoc->mode==WORK_MODE){
+		if(/*compContour==false && */myDoc->scissorStatus && contour && myDoc->mode==WORK_MODE){
 			myDoc->drawContour(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		}
 		break;
