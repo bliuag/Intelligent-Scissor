@@ -24,6 +24,7 @@ public:
 	void stopContour();
 	int handle(int event);
 	bool contour;
+	bool compContour;
 private:
 	int width;
 	int height;

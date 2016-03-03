@@ -106,10 +106,9 @@ void ISUI::cb_open(Fl_Menu_ *w, void *)
     }
 }
 
-void ISUI::cb_save_contour(Fl_Menu_ *w, void *)
-{
+void ISUI::cb_save_contour(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
-
+    if (myDoc==NULL) return;
     Fl_File_Chooser chooser("save.bmp","*",2,"Save File?");//2 means create a new file
     chooser.show();
     while(chooser.shown()){Fl::wait();}
@@ -118,7 +117,20 @@ void ISUI::cb_save_contour(Fl_Menu_ *w, void *)
         myDoc->saveImageWithContour((char*)chooser.value());
     }
 }
-void ISUI::cb_save_mask(Fl_Widget *w, void *){}
+void ISUI::cb_save_mask(Fl_Widget *w, void *){
+    ISDoc *myDoc=whoami(w)->getDocument();
+    if (myDoc==NULL) return;
+    if (whoami(w)->pic->compContour==false) return;
+
+    Fl_File_Chooser chooser("savemask.bmp","*",2,"Save File?");//2 means create a new file
+    chooser.show();
+    while(chooser.shown()){Fl::wait();}
+    if (chooser.value() != NULL)
+    {
+        myDoc->saveImageWithMask((char*)chooser.value());
+    }
+
+}
 void ISUI::cb_quit(Fl_Widget *w, void *)
 {
     exit(0);
