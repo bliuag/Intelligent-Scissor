@@ -44,7 +44,7 @@ public:
 	char* getImageName();
 
 	int loadImage(const char* picName);
-	int saveImage(char* picName);
+	int saveImageWithContour(char* picName);
 	int width,height;
 	unsigned char*	bitmap;
 	int zw,zh;

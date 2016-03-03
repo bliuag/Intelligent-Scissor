@@ -115,7 +115,7 @@ void ISUI::cb_save_contour(Fl_Menu_ *w, void *)
     while(chooser.shown()){Fl::wait();}
     if (chooser.value() != NULL)
     {
-        myDoc->saveImage((char*)chooser.value());
+        myDoc->saveImageWithContour((char*)chooser.value());
     }
 }
 void ISUI::cb_save_mask(Fl_Widget *w, void *){}
