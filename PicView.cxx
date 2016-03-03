@@ -94,6 +94,8 @@ int PicView::handle(int event)
 		//cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
 		if (myDoc->mode!=WORK_MODE) break;
+		if (contour==false)
+			myDoc->setStartSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		myDoc->setSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		contour=true;
 		flush();
@@ -101,7 +103,7 @@ int PicView::handle(int event)
 	case FL_MOVE:
 		if (Fl::event_y()<=0 || Fl::event_y()>myDoc->zh || Fl::event_x()<=0 || Fl::event_x()>myDoc->zw) break;
 		if(contour && myDoc->mode==WORK_MODE){
-			//cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
+			cout<<"x: "<<Fl::event_y()<<" y: "<<Fl::event_x()<<"\n";
 			myDoc->drawContour(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		}
 		break;

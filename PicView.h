@@ -23,11 +23,11 @@ public:
 	ISDoc *myDoc;
 	void stopContour();
 	int handle(int event);
-
+	bool contour;
 private:
 	int width;
 	int height;
-	bool contour;
+	
 };
 
 #endif

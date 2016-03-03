@@ -69,6 +69,7 @@ public:
 	void stopContour();
 	void setSeed(int,int);
 	void closeContour();
+	void setStartSeed(int,int);
 private:
 	void initializeMatrix();
 	void refreshCurmap();
@@ -80,7 +81,7 @@ private:
 	Color** debugMatrix;
 	double maxD;
 	int curlayer;
-	
+	Point* startSeed;
 };
 
 
