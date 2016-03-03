@@ -302,7 +302,6 @@ void ISDoc::initializeMatrix(){
 void ISDoc::refreshCurmap(){
 	curmap=new unsigned char[zw*zh*3];
 	if (mode == WORK_MODE){
-		cout << "~~~working mode = work mode" << endl;
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
 				if(nodeMatrix[int(i/z)][int(j/z)].drawed!=0){
@@ -318,7 +317,6 @@ void ISDoc::refreshCurmap(){
 			}
 
 	}else{
-		cout << "~~~working mode = debug mode" << endl;
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
 				curmap[(i*zw+j)*3]=debugMatrix[int(i/z)][int(j/z)].c1;
@@ -449,9 +447,7 @@ void ISDoc::undo(){
 	if(seed==NULL)
 		return;
 
-	if(last!=NULL)
-	{
-		// cout << "last != NULL" << endl;
+	if(last!=NULL){
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col )
 		{
@@ -462,7 +458,6 @@ void ISDoc::undo(){
 		last=NULL;
 	}
 	if(seeds.empty()){
-		//cout<<"empty\n";
 		refreshCurmap();
 		return;
 	}
@@ -472,7 +467,6 @@ void ISDoc::undo(){
 		refreshCurmap();
 		return;
 	}
-	//cout<<"***\n";
 	last=seed;
 	seed=new Point;
 	(*seed)=seeds.top();
@@ -482,7 +476,6 @@ void ISDoc::undo(){
 	calcCostTree(seed->row,seed->col,-1);
 	if(last!=NULL)
 	{
-		// cout << "last != NULL" << endl;
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col )
 		{
