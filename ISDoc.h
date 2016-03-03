@@ -7,7 +7,7 @@
 #define EXPANDED 2
 #define WORK_MODE 0
 #define DEBUG_MODE 1
-
+#define IMAGE_ONLY 2
 class ISUI;
 
 struct Color{
@@ -52,7 +52,8 @@ public:
 	unsigned char*  curmap;
 
 	void zoom(char inq);
-	void backToWorkMode();
+	void toImageOnlyMode();
+	void toImageWithContourMode();
 	void drawContour(int,int);
 
 	void pixelNode();
@@ -63,7 +64,7 @@ public:
 	int calcCostTree(int,int,int);
 	Point* seed;
 	Point* last;
-	bool mode;
+	int mode;
 	
 	void undo();
 	void stopContour();

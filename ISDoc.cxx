@@ -122,11 +122,20 @@ void ISDoc::zoom(char inq){
 	refreshCurmap();
 }
 
-void ISDoc::backToWorkMode(){
+void ISDoc::toImageWithContourMode(){
 	zw=width;
 	zh=height;
 	z=1.0;
 	mode = WORK_MODE;
+	refreshCurmap();
+	myUI->pic->show();
+}
+
+void ISDoc::toImageOnlyMode(){
+	zw=width;
+	zh=height;
+	z=1.0;
+	mode = IMAGE_ONLY;
 	refreshCurmap();
 	myUI->pic->show();
 }
@@ -320,7 +329,17 @@ void ISDoc::initializeMatrix(){
 
 void ISDoc::refreshCurmap(){
 	curmap=new unsigned char[zw*zh*3];
-	if (mode == WORK_MODE){
+	if(mode==IMAGE_ONLY)
+	{
+		for(int i=0;i<zh;i++)
+			for(int j=0;j<zw;j++)
+			{
+				curmap[(i*zw+j)*3]=nodeMatrix[int(i/z)][int(j/z)].c1;
+				curmap[(i*zw+j)*3+1]=nodeMatrix[int(i/z)][int(j/z)].c2;
+				curmap[(i*zw+j)*3+2]=nodeMatrix[int(i/z)][int(j/z)].c3;
+			}
+	}
+	else if (mode == WORK_MODE){
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
 				if(nodeMatrix[int(i/z)][int(j/z)].drawed!=0){
@@ -477,6 +496,7 @@ void ISDoc::undo(){
 		last=NULL;
 	}
 	if(seeds.empty()){
+		myUI->pic->contour=false;
 		refreshCurmap();
 		return;
 	}

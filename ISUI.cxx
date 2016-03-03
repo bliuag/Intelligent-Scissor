@@ -49,8 +49,8 @@ Fl_Menu_Item ISUI::menuitems[]=
                 {"4x4",     0,(Fl_Callback *)ISUI::cb_4x4,0,FL_MENU_RADIO},
                 {"5x5",     0,(Fl_Callback *)ISUI::cb_5x5,0,FL_MENU_RADIO},
                 {0},
-            {"Zoom in",     FL_CTRL+'j',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
-            {"Zoom out",    FL_CTRL+'k',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
+            {"Zoom in",     FL_CTRL+'[',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
+            {"Zoom out",    FL_CTRL+']',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
             {0},
         {"Action",0,0,0,FL_MENU_DIVIDER|FL_SUBMENU},
             {"Finish Contour",'.',(Fl_Callback *)ISUI::cb_finish,0,0},
@@ -148,11 +148,12 @@ void ISUI::cb_zoom_out(Fl_Menu_ *w, void *){
 
 void ISUI::cb_Image_Only(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
-    myDoc->backToWorkMode();
+    myDoc->toImageOnlyMode();
 }
 
 void ISUI::cb_Image_Contour(Fl_Menu_ *w, void *){
-
+    ISDoc *myDoc=whoami(w)->getDocument();
+    myDoc->toImageWithContourMode();
 }
 
 void ISUI::cb_finish(Fl_Menu_ *w, void *){
