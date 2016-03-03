@@ -87,10 +87,28 @@ int ISDoc::loadImage(const char* picName){
 
 }
 
-int ISDoc::saveImage(char* picName){
-	writeBMP(picName, width, height, bitmap);
+int ISDoc::saveImageWithContour(char* picName){
+	if(bitmap==NULL)
+		return 0;
+	unsigned char* savemap=new unsigned char[3*width*height];
+	for(int i=0;i<height;i++)
+			for(int j=0;j<width;j++){
+				if(nodeMatrix[i][j].drawed!=0){
+					savemap[(i*width+j)*3]=255;
+					savemap[(i*width+j)*3+1]=0;
+					savemap[(i*width+j)*3+2]=0;
+				}
+				else{
+					savemap[(i*width+j)*3]=nodeMatrix[i][j].c1;
+					savemap[(i*width+j)*3+1]=nodeMatrix[i][j].c2;
+					savemap[(i*width+j)*3+2]=nodeMatrix[i][j].c3;
+				}
+			}
+
+	writeBMP(picName, width, height, savemap);
 	return 1;
 }
+
 
 // ===================== WORK MODE ====================
 
