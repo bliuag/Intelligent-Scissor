@@ -65,6 +65,7 @@ int ISDoc::loadImage(const char* picName){
 	seed=last=NULL;
 	while(!seeds.empty())
 		seeds.pop();
+	curlayer=0;
 	// int l=width*height*3;
 	// curmap=new unsigned char[l];
 	// for(int i=0;i<l;i++)
@@ -109,18 +110,21 @@ void ISDoc::drawContour(int row,int col){
 	if(last!=NULL){
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col){
-			p->drawed=false;
+			if(p->drawed==curlayer)
+				p->drawed=0;
 			p=p->preNode;
 		}
 		last=NULL;//////
 	}
-	if(nodeMatrix[row][col].drawed==false){
+	// if(nodeMatrix[row][col].drawed==false)
+	{
 		last=new Point;
 		last->row=row;
 		last->col=col;
 		Node *p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col ){
-			p->drawed=true;
+			if(p->drawed==0)
+				p->drawed=curlayer;
 			p=p->preNode;
 		}
 	}
@@ -285,7 +289,7 @@ void ISDoc::initializeMatrix(){
 			nodeMatrix[i][j].state=INITIAL;
 			nodeMatrix[i][j].preNode=NULL;
 			nodeMatrix[i][j].totalCost=-1;
-			nodeMatrix[i][j].drawed=false;
+			nodeMatrix[i][j].drawed=0;
 		}
 }
 
@@ -295,7 +299,7 @@ void ISDoc::refreshCurmap(){
 		cout << "~~~working mode = work mode" << endl;
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
-				if(nodeMatrix[int(i/z)][int(j/z)].drawed==true){
+				if(nodeMatrix[int(i/z)][int(j/z)].drawed!=0){
 					curmap[(i*zw+j)*3]=255;
 					curmap[(i*zw+j)*3+1]=0;
 					curmap[(i*zw+j)*3+2]=0;
@@ -431,8 +435,8 @@ void ISDoc::stopContour(){
 		delete last;
 		last=NULL;
 	}
-	while(!seeds.empty())
-		seeds.pop();
+	// while(!seeds.empty())
+	// 	seeds.pop();
 }
 
 void ISDoc::undo(){
@@ -444,21 +448,23 @@ void ISDoc::undo(){
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col )
 		{
-			p->drawed=false;
+			if(p->drawed==curlayer)
+				p->drawed=0;
 			p=p->preNode;
 		}
 		last=NULL;
 	}
 	if(seeds.empty()){
-		cout<<"empty\n";
+		//cout<<"empty\n";
 		return;
 	}
-	cout<<"***\n";
+	//cout<<"***\n";
 	last=seed;
 	seed=new Point;
 	(*seed)=seeds.top();
 	seeds.pop();
 	cout<<seed->row<<" "<<seed->col<<endl;
+	curlayer--;
 	calcCostTree(seed->row,seed->col,-1);
 	if(last!=NULL)
 	{
@@ -466,7 +472,8 @@ void ISDoc::undo(){
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col )
 		{
-			p->drawed=false;
+			if(p->drawed==curlayer)
+				p->drawed=0;
 			p=p->preNode;
 		}
 		last=NULL;
@@ -482,6 +489,7 @@ void ISDoc::setSeed(int row,int col){
 		seeds.push(*seed);
 		delete seed;
 	}
+	curlayer++;
 	seed=new Point;
 	seed->row=row;
 	seed->col=col;
