@@ -73,6 +73,7 @@ int ISDoc::loadImage(const char* picName){
 		last=NULL;
 	}
 	myUI->pic->contour=false;
+	myUI->pic->compContour=false;
 	// int l=width*height*3;
 	// curmap=new unsigned char[l];
 	// for(int i=0;i<l;i++)
@@ -102,6 +103,56 @@ int ISDoc::saveImageWithContour(char* picName){
 					savemap[(i*width+j)*3]=nodeMatrix[i][j].c1;
 					savemap[(i*width+j)*3+1]=nodeMatrix[i][j].c2;
 					savemap[(i*width+j)*3+2]=nodeMatrix[i][j].c3;
+				}
+			}
+
+	writeBMP(picName, width, height, savemap);
+	return 1;
+}
+
+
+
+int ISDoc::saveImageWithMask(char* picName){
+	if(bitmap==NULL)
+		return 0;
+	queue<Node> q;
+	Node cur;
+	int xx,yy;
+	bool b[width][height];
+
+	for (int i=0;i<height;i++)
+		for (int j=0;j<width;j++){
+			b[i][j]=false;
+			nodeMatrix[i][j].outside=false;
+		}
+	
+	nodeMatrix[0][0].outside=true; q.push(nodeMatrix[0][0]);
+
+	
+	while (!q.empty()){
+		cur = q.front(); q.pop();
+		for (int d=0;d<8;d+=2){
+			xx=cur.row+dir[d][0]; yy=cur.col+dir[d][1];
+			if (xx<0 || xx>height-1 || yy<0 || yy>width-1) continue;
+			if (nodeMatrix[xx][yy].outside || nodeMatrix[xx][yy].drawed) continue;
+			q.push(nodeMatrix[xx][yy]);
+			nodeMatrix[xx][yy].outside=true;
+		}
+	}
+
+
+	unsigned char* savemap=new unsigned char[3*width*height];
+	for(int i=0;i<height;i++)
+			for(int j=0;j<width;j++){
+				if(nodeMatrix[i][j].outside==true){
+					savemap[(i*width+j)*3]=0;
+					savemap[(i*width+j)*3+1]=0;
+					savemap[(i*width+j)*3+2]=0;
+				}
+				else{
+					savemap[(i*width+j)*3]=255;
+					savemap[(i*width+j)*3+1]=255;
+					savemap[(i*width+j)*3+2]=255;
 				}
 			}
 
@@ -170,7 +221,6 @@ void ISDoc::drawContour(int row,int col){
 
 void ISDoc::pixelNode(){
 	mode = DEBUG_MODE;
-	cout << "changing mode" << endl;
 	debugMatrix = new Color*[3*height];
 	for (int i=0;i<3*height;i++)
 		debugMatrix[i] = new Color[3*width];
@@ -198,7 +248,6 @@ void ISDoc::pixelNode(){
 
 void ISDoc::costGraph(){
 	mode = DEBUG_MODE;
-	cout << "changing mode" << endl;
 	debugMatrix = new Color*[3*height];
 	for (int i=0;i<3*height;i++)
 		debugMatrix[i] = new Color[3*width];
@@ -229,7 +278,6 @@ void ISDoc::costGraph(){
 
 void ISDoc::pathTree(int seedr, int seedc, int expand){
 	mode = DEBUG_MODE;
-	cout << "changing mode into pathTree" << endl;
 	debugMatrix = new Color*[3*height];
 	for (int i=0;i<3*height;i++)
 		debugMatrix[i] = new Color[3*width];
@@ -268,7 +316,6 @@ void ISDoc::pathTree(int seedr, int seedc, int expand){
 
 void ISDoc::minPath(int seedr, int seedc){
 	mode = DEBUG_MODE;
-	cout << "changing mode into minPath" << endl;
 	debugMatrix = new Color*[3*height];
 	for (int i=0;i<3*height;i++)
 		debugMatrix[i] = new Color[3*width];
@@ -287,7 +334,6 @@ void ISDoc::minPath(int seedr, int seedc){
 			debugMatrix[i*3+1][j*3+1].c2 = nodeMatrix[i][j].c2;
 			debugMatrix[i*3+1][j*3+1].c3 = nodeMatrix[i][j].c3;
 		}
-	cout<<"here~~"<<endl;
 	for (int i=0;i<height;i++)
 		for (int j=0;j<width;j++){
 			if (nodeMatrix[i][j].totalCost==-1 || nodeMatrix[i][j].preNode==NULL) continue;
@@ -553,6 +599,7 @@ void ISDoc::closeContour(){
 	//seeds.push(*startSeed);
 	drawContour(startSeed->row,startSeed->col);
 	myUI->pic->stopContour();
+	myUI->pic->compContour=true;
 }
 
 void ISDoc::setStartSeed(int row,int col)

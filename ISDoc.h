@@ -33,6 +33,7 @@ struct Node{
  	int row;
  	int col;
  	int drawed;
+ 	bool outside;
  };
 
 
@@ -40,16 +41,19 @@ class ISDoc{
 
 public: 
 	ISDoc();
-	void setUI(ISUI*);
-	char* getImageName();
-
-	int loadImage(const char* picName);
-	int saveImageWithContour(char* picName);
 	int width,height;
 	unsigned char*	bitmap;
 	int zw,zh;
 	double z;
 	unsigned char*  curmap;
+
+	void setUI(ISUI*);
+	char* getImageName();
+
+	int loadImage(const char* picName);
+	int saveImageWithContour(char* picName);
+	int saveImageWithMask(char* picName);
+	
 
 	void zoom(char inq);
 	void toImageOnlyMode();
