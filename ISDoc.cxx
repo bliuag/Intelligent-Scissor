@@ -72,6 +72,7 @@ int ISDoc::loadImage(const char* picName){
 		delete last;
 		last=NULL;
 	}
+	myUI->pic->contour=false;
 	// int l=width*height*3;
 	// curmap=new unsigned char[l];
 	// for(int i=0;i<l;i++)
