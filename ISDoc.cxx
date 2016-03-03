@@ -60,12 +60,18 @@ int ISDoc::loadImage(const char* picName){
 	myUI->pic->show();
 	calcLinkCost();
 	calcCostTree(1,1,-1);
-	if(seed!=0)delete seed;
-	if(last!=0)delete last;
 	seed=last=NULL;
 	while(!seeds.empty())
 		seeds.pop();
 	curlayer=0;
+	if(seed!=NULL){
+		delete seed;
+		seed=NULL;
+	}
+	if(last!=NULL){
+		delete last;
+		last=NULL;
+	}
 	// int l=width*height*3;
 	// curmap=new unsigned char[l];
 	// for(int i=0;i<l;i++)
@@ -427,14 +433,14 @@ int ISDoc::calcCostTree(int row,int col,int expand){ //return the max cost withi
 
 
 void ISDoc::stopContour(){
-	if(seed!=NULL){
-		delete seed;
-		seed=NULL;
-	}
-	if(last!=NULL){
-		delete last;
-		last=NULL;
-	}
+	// if(seed!=NULL){
+	// 	delete seed;
+	// 	seed=NULL;
+	// }
+	// if(last!=NULL){
+	// 	delete last;
+	// 	last=NULL;
+	// }
 	// while(!seeds.empty())
 	// 	seeds.pop();
 }
@@ -442,6 +448,7 @@ void ISDoc::stopContour(){
 void ISDoc::undo(){
 	if(seed==NULL)
 		return;
+
 	if(last!=NULL)
 	{
 		// cout << "last != NULL" << endl;
@@ -456,6 +463,13 @@ void ISDoc::undo(){
 	}
 	if(seeds.empty()){
 		//cout<<"empty\n";
+		refreshCurmap();
+		return;
+	}
+	if(myUI->pic->contour==false)
+	{
+		myUI->pic->contour=true;
+		refreshCurmap();
 		return;
 	}
 	//cout<<"***\n";
@@ -478,6 +492,7 @@ void ISDoc::undo(){
 		}
 		last=NULL;
 	}
+	
 	// last=temp;
 	//drawContour(temp->row,temp->col);
 	refreshCurmap();
@@ -497,12 +512,23 @@ void ISDoc::setSeed(int row,int col){
 }
 
 void ISDoc::closeContour(){
-	Point temp;
-	while(!seeds.empty())
-	{
-		temp=seeds.top();
-		seeds.pop();
-	}
-	drawContour(temp.row,temp.col);
+	// Point temp;
+	// while(!seeds.empty())
+	// {
+	// 	temp=seeds.top();
+	// 	seeds.pop();
+	// }
+	//seeds.push(*startSeed);
+	drawContour(startSeed->row,startSeed->col);
 	myUI->pic->stopContour();
 }
+
+void ISDoc::setStartSeed(int row,int col)
+{
+	startSeed=new Point;
+	startSeed->col=col;
+	startSeed->row=row;
+}
+
+
+
