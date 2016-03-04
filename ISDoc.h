@@ -34,7 +34,6 @@ struct Node{
  	int col;
  	int drawed;
  	bool outside;
- 	bool brushed;
  };
 
 
@@ -60,7 +59,6 @@ public:
 	void toImageOnlyMode();
 	void toImageWithContourMode();
 	void drawContour(int,int);
-	void drawBrush(int,int);
 
 	void pixelNode();
 	void costGraph();
@@ -80,9 +78,6 @@ public:
 
 	bool scissorStatus;
 	bool brushStatus;
-	bool haveBrushed;
-
-	Node** nodeMatrix;
 	
 private:
 	void initializeMatrix();
@@ -91,7 +86,7 @@ private:
 	void initStates();
 	char imageName[256];
 	ISUI* myUI;
-	
+	Node** nodeMatrix;
 	Color** debugMatrix;
 	double maxD;
 	int curlayer;
