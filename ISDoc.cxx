@@ -76,7 +76,6 @@ int ISDoc::loadImage(const char* picName){
 	//myUI->pic->compContour=false;
 	scissorStatus = false;
     brushStatus = false;
-    haveBrushed = false;
 	// int l=width*height*3;
 	// curmap=new unsigned char[l];
 	// for(int i=0;i<l;i++)
@@ -218,19 +217,6 @@ void ISDoc::drawContour(int row,int col){
 	}
 	refreshCurmap();
 }
-
-void ISDoc::drawBrush(int row,int col){
-	haveBrushed = true;
-	int xx,yy;
-
-	for (xx=row-8;xx<=row+8;xx++)
-		for (yy=col-8;yy<=col+8;yy++){
-			if (xx<0 || yy<0 || xx>=height || yy>=width) continue;
-			nodeMatrix[xx][yy].brushed = 1;
-		}
-	refreshCurmap();
-}
-
 // ===================== End of WORK MODE ====================
 
 // ===================== DEBUG MODE ====================
@@ -386,13 +372,13 @@ void ISDoc::initializeMatrix(){
 			nodeMatrix[i][j].preNode=NULL;
 			nodeMatrix[i][j].totalCost=-1;
 			nodeMatrix[i][j].drawed=0;
-			nodeMatrix[i][j].brushed=0;
 		}
 }
 
 void ISDoc::refreshCurmap(){
 	curmap=new unsigned char[zw*zh*3];
-	if(mode==IMAGE_ONLY){
+	if(mode==IMAGE_ONLY)
+	{
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++)
 			{
@@ -402,27 +388,21 @@ void ISDoc::refreshCurmap(){
 			}
 	}
 	else if (mode == WORK_MODE){
-		//brush
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
-				if(nodeMatrix[int(i/z)][int(j/z)].brushed!=0){
-					curmap[(i*zw+j)*3]=(int)nodeMatrix[int(i/z)][int(j/z)].c1*0.5;
-					curmap[(i*zw+j)*3+1]=(int)nodeMatrix[int(i/z)][int(j/z)].c2*0.5;
-					curmap[(i*zw+j)*3+2]=(int)nodeMatrix[int(i/z)][int(j/z)].c3*0.5;
-				}
 				if(nodeMatrix[int(i/z)][int(j/z)].drawed!=0){
 					curmap[(i*zw+j)*3]=255;
 					curmap[(i*zw+j)*3+1]=0;
 					curmap[(i*zw+j)*3+2]=0;
 				}
-				else if (nodeMatrix[int(i/z)][int(j/z)].brushed==0){
+				else{
 					curmap[(i*zw+j)*3]=nodeMatrix[int(i/z)][int(j/z)].c1;
 					curmap[(i*zw+j)*3+1]=nodeMatrix[int(i/z)][int(j/z)].c2;
 					curmap[(i*zw+j)*3+2]=nodeMatrix[int(i/z)][int(j/z)].c3;
 				}
 			}
 
-	}else{ //mode == debug
+	}else{
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
 				curmap[(i*zw+j)*3]=debugMatrix[int(i/z)][int(j/z)].c1;
@@ -511,7 +491,6 @@ int ISDoc::calcCostTree(int row,int col,int expand){ //return the max cost withi
 			di = x.row + dir[d][0]; dj = x.col + dir[d][1];
 			if (di<=0 || dj<=0 || di>=height-1 || dj>=width-1) continue;
 			if (nodeMatrix[di][dj].state ==EXPANDED) continue;
-			if (haveBrushed && nodeMatrix[di][dj].brushed==false) continue;
 			//if (nodeMatrix[di][dj].drawed ==true) continue;
 			if (nodeMatrix[di][dj].state == INITIAL && cnt<expand){
 				nodeMatrix[di][dj].state = ACTIVE;
@@ -577,9 +556,10 @@ void ISDoc::undo(){
 	seed=new Point;
 	(*seed)=seeds.top();
 	seeds.pop();
+	// cout<<seed->row<<" "<<seed->col<<endl;
 	curlayer--;
 	calcCostTree(seed->row,seed->col,-1);
-	if(last!=NULL)
+	if(last!=NULL)//????
 	{
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col )
