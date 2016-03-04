@@ -142,12 +142,14 @@ void ISUI::cb_quit(Fl_Widget *w, void *)
 void ISUI::cb_brush(Fl_Widget *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
     if (myDoc==NULL) return;
+    myDoc->mode = WORK_MODE;
     myDoc->scissorStatus = false;
     myDoc->brushStatus = true;
 }
 void ISUI::cb_scissor(Fl_Widget *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
     if (myDoc==NULL) return;
+    myDoc->mode = WORK_MODE;
     myDoc->scissorStatus = true;
     myDoc->brushStatus = false;
 }
@@ -174,7 +176,6 @@ void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
     if (myDoc==NULL) return;
     if (myDoc->mode == DEBUG_MODE) return;
     myDoc->zoom('+');
-    cout<<"bp2";
 }
 void ISUI::cb_zoom_out(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
