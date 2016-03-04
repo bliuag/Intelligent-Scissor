@@ -16,6 +16,7 @@
 #include "PicView.h"
 #include <FL/Fl_Scroll.H>
 #include <FL/Fl_Value_Slider.H>
+#include <FL/Fl_Output.H>
 
 class ISDoc;
 
@@ -33,6 +34,7 @@ public:
 	Fl_Double_Window* mainWindow;
 	Fl_Menu_Bar* menuBar;
 	PicView* pic;
+	Fl_Output *text;
 	static Fl_Menu_Item menuitems[];
 	Fl_Double_Window* numWindow;
 	Fl_Value_Slider* numSlider;

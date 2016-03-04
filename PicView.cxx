@@ -87,6 +87,7 @@ int PicView::handle(int event)
 		break;
 	case FL_MOVE:
 		if (Fl::event_y()<=1 || Fl::event_y()/myDoc->z >= myDoc->height-2 || Fl::event_x()<=1 || Fl::event_x()/myDoc->z >= myDoc->width-2) break;
+		myDoc->setText(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		if(/*compContour==false && */myDoc->scissorStatus && contour==1 && myDoc->mode==WORK_MODE){
 			myDoc->drawContour(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
 		}

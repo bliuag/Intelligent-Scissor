@@ -7,11 +7,12 @@ ISUI::ISUI(){
     // fl_register_images();    
     mainWindow = new Fl_Double_Window(600,360);
     mainWindow->user_data((void*)(this));
-    menuBar = new Fl_Menu_Bar(0,0,600,20);
-    menuBar->copy(menuitems);
-    pic= new PicView(0,20,600,340,"This is the Picture");
-    pic->box(FL_DOWN_FRAME);
-
+        menuBar = new Fl_Menu_Bar(0,0,600,20);
+        menuBar->copy(menuitems);
+        pic= new PicView(0,20,600,320,"This is the Picture");
+        pic->box(FL_DOWN_FRAME);
+        text=new Fl_Output(40,340,560,20,"Pixel");
+        text->value("start");
     mainWindow->resizable(pic);
     mainWindow->end();
 

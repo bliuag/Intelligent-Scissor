@@ -75,7 +75,7 @@ public:
 	void setSeed(int,int);
 	void closeContour();
 	void setStartSeed(int,int);
-
+	void setText(int,int);
 	bool scissorStatus;
 	bool brushStatus;
 	

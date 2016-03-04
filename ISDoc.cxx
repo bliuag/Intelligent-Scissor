@@ -7,7 +7,7 @@
 #include <cmath>
 #include <queue>
 #include <stack>
-
+#include <string>
 using namespace std;
 
 priority_queue <Node> q;
@@ -609,5 +609,18 @@ void ISDoc::setStartSeed(int row,int col)
 	startSeed->row=row;
 }
 
-
+void ISDoc::setText(int row,int col)
+{
+	string output="x: ";
+	output.append(to_string(col));
+	output.append(" y: ");
+	output.append(to_string(row));
+	output.append(" R: ");
+	output.append(to_string(nodeMatrix[row][col].c1));
+	output.append(" G: ");
+	output.append(to_string(nodeMatrix[row][col].c2));
+	output.append(" B: ");
+	output.append(to_string(nodeMatrix[row][col].c3));
+	myUI->text->value(output.c_str());
+}
 
