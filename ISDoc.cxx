@@ -72,7 +72,7 @@ int ISDoc::loadImage(const char* picName){
 		delete last;
 		last=NULL;
 	}
-	myUI->pic->contour=false;
+	myUI->pic->contour=0;
 	//myUI->pic->compContour=false;
 	scissorStatus = false;
     brushStatus = false;
@@ -517,16 +517,7 @@ int ISDoc::calcCostTree(int row,int col,int expand){ //return the max cost withi
 
 
 void ISDoc::stopContour(){
-	// if(seed!=NULL){
-	// 	delete seed;
-	// 	seed=NULL;
-	// }
-	// if(last!=NULL){
-	// 	delete last;
-	// 	last=NULL;
-	// }
-	// while(!seeds.empty())
-	// 	seeds.pop();
+	myUI->pic->contour=0;
 }
 
 void ISDoc::undo(){
@@ -544,14 +535,20 @@ void ISDoc::undo(){
 		last=NULL;
 	}
 	if(seeds.empty()){
-		myUI->pic->contour=false;
+		myUI->pic->contour=0;
 		//myUI->pic->compContour=false;
 		refreshCurmap();
 		return;
 	}
-	if(myUI->pic->contour==false)
+	if(myUI->pic->contour==2)
 	{
-		myUI->pic->contour=true;
+		myUI->pic->contour=1;
+		refreshCurmap();
+		return;
+	}
+	if(myUI->pic->contour==0)
+	{
+		myUI->pic->contour=1;
 		refreshCurmap();
 		return;
 	}
@@ -559,7 +556,7 @@ void ISDoc::undo(){
 	seed=new Point;
 	(*seed)=seeds.top();
 	seeds.pop();
-	cout<<seed->row<<" "<<seed->col<<endl;
+	// cout<<seed->row<<" "<<seed->col<<endl;
 	curlayer--;
 	calcCostTree(seed->row,seed->col,-1);
 	if(last!=NULL)//????
@@ -601,7 +598,7 @@ void ISDoc::closeContour(){
 	// }
 	//seeds.push(*startSeed);
 	drawContour(startSeed->row,startSeed->col);
-	myUI->pic->stopContour();
+	myUI->pic->contour=2;
 //	myUI->pic->compContour=true;
 }
 

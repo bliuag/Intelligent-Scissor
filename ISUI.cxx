@@ -120,7 +120,7 @@ void ISUI::cb_save_contour(Fl_Menu_ *w, void *){
 void ISUI::cb_save_mask(Fl_Widget *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
     if (myDoc==NULL) return;
-    if (whoami(w)->pic->compContour==false) return;
+    if (whoami(w)->pic->contour!=2) return;
 
     Fl_File_Chooser chooser("savemask.bmp","*",2,"Save File?");//2 means create a new file
     chooser.show();
@@ -179,7 +179,7 @@ void ISUI::cb_Image_Contour(Fl_Menu_ *w, void *){
 }
 
 void ISUI::cb_finish(Fl_Menu_ *w, void *){
-    whoami(w)->pic->stopContour();
+    whoami(w)->getDocument()->stopContour();
     //cout<<whoami(w)->pic->contour<<endl;
     //exit(0);
 }
