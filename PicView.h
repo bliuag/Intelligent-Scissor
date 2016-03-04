@@ -21,9 +21,8 @@ public:
 	void refresh();
 
 	ISDoc *myDoc;
-	void stopContour();
 	int handle(int event);
-	bool contour;
+	int contour;
 	//bool compContour;
 private:
 	int width;
