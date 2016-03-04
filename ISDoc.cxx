@@ -7,7 +7,7 @@
 #include <cmath>
 #include <queue>
 #include <stack>
-
+#include <string>
 using namespace std;
 
 priority_queue <Node> q;
@@ -55,28 +55,12 @@ int ISDoc::loadImage(const char* picName){
 	zh=height = h;
 	z=1.0;
 	mode = WORK_MODE;
-	initializeMatrix();
+	initializeMatrix(-1);
 	refreshCurmap();
 	myUI->pic->show();
-	calcLinkCost();
-	calcCostTree(1,1,-1);
-	seed=last=NULL;
-	while(!seeds.empty())
-		seeds.pop();
-	curlayer=0;
-	if(seed!=NULL){
-		delete seed;
-		seed=NULL;
-	}
-	if(last!=NULL){
-		delete last;
-		last=NULL;
-	}
-	myUI->pic->contour=0;
-	//myUI->pic->compContour=false;
-	scissorStatus = false;
-    brushStatus = false;
-    haveBrushed = false;
+	
+	//calcCostTree(1,1,-1);
+	
 	// int l=width*height*3;
 	// curmap=new unsigned char[l];
 	// for(int i=0;i<l;i++)
@@ -218,19 +202,6 @@ void ISDoc::drawContour(int row,int col){
 	}
 	refreshCurmap();
 }
-
-void ISDoc::drawBrush(int row,int col){
-	haveBrushed = true;
-	int xx,yy;
-
-	for (xx=row-8;xx<=row+8;xx++)
-		for (yy=col-8;yy<=col+8;yy++){
-			if (xx<0 || yy<0 || xx>=height || yy>=width) continue;
-			nodeMatrix[xx][yy].brushed = 1;
-		}
-	refreshCurmap();
-}
-
 // ===================== End of WORK MODE ====================
 
 // ===================== DEBUG MODE ====================
@@ -369,8 +340,24 @@ void ISDoc::minPath(int seedr, int seedc){
 }
 // ===================== End of DEBUG MODE ====================
 
-void ISDoc::initializeMatrix(){
+void ISDoc::initializeMatrix(int blur=-1){
 
+	seed=last=NULL;
+	while(!seeds.empty())
+		seeds.pop();
+	curlayer=0;
+	if(seed!=NULL){
+		delete seed;
+		seed=NULL;
+	}
+	if(last!=NULL){
+		delete last;
+		last=NULL;
+	}
+	myUI->pic->contour=0;
+	//myUI->pic->compContour=false;
+	scissorStatus = false;
+    brushStatus = false;
 	nodeMatrix = new Node*[height];
 	for (int i=0;i<height;i++)
 		nodeMatrix[i] = new Node[width];
@@ -386,13 +373,46 @@ void ISDoc::initializeMatrix(){
 			nodeMatrix[i][j].preNode=NULL;
 			nodeMatrix[i][j].totalCost=-1;
 			nodeMatrix[i][j].drawed=0;
-			nodeMatrix[i][j].brushed=0;
 		}
+	Node ** origin;
+	switch(blur)
+	{
+		case -1:
+			break;
+		case 3:
+			origin=nodeMatrix;
+			nodeMatrix = new Node*[height];
+			for (int i=0;i<height;i++)
+				nodeMatrix[i] = new Node[width];
+			for (int i=0;i<height;i++)
+				for (int j=0;j<width;j++)
+				{
+					if(i==0||i==height-1||j==0||j==width-1)
+					{
+						nodeMatrix[i][j]=origin[i][j];
+						continue;
+					}
+					nodeMatrix[i][j].c1=(origin[i][j].c1*2+origin[i-1][j-1].c1+origin[i-1][j].c1+origin[i-1][j+1].c1+origin[i][j-1].c1+origin[i][j+1].c1+origin[i+1][j-1].c1+origin[i+1][j].c1+origin[i+1][j+1].c1)/10;
+					nodeMatrix[i][j].c2=(origin[i][j].c2*2+origin[i-1][j-1].c2+origin[i-1][j].c2+origin[i-1][j+1].c2+origin[i][j-1].c2+origin[i][j+1].c2+origin[i+1][j-1].c2+origin[i+1][j].c2+origin[i+1][j+1].c2)/10;
+					nodeMatrix[i][j].c3=(origin[i][j].c3*2+origin[i-1][j-1].c3+origin[i-1][j].c3+origin[i-1][j+1].c3+origin[i][j-1].c3+origin[i][j+1].c3+origin[i+1][j-1].c3+origin[i+1][j].c3+origin[i+1][j+1].c3)/10;
+					nodeMatrix[i][j].row=i;
+					nodeMatrix[i][j].col=j;
+					nodeMatrix[i][j].state=INITIAL;
+					nodeMatrix[i][j].preNode=NULL;
+					nodeMatrix[i][j].totalCost=-1;
+					nodeMatrix[i][j].drawed=0;
+				}
+			break;
+		default:
+			break;
+	}
+	calcLinkCost();
 }
 
 void ISDoc::refreshCurmap(){
 	curmap=new unsigned char[zw*zh*3];
-	if(mode==IMAGE_ONLY){
+	if(mode==IMAGE_ONLY)
+	{
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++)
 			{
@@ -402,27 +422,21 @@ void ISDoc::refreshCurmap(){
 			}
 	}
 	else if (mode == WORK_MODE){
-		//brush
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
-				if(nodeMatrix[int(i/z)][int(j/z)].brushed!=0){
-					curmap[(i*zw+j)*3]=(int)nodeMatrix[int(i/z)][int(j/z)].c1*0.5;
-					curmap[(i*zw+j)*3+1]=(int)nodeMatrix[int(i/z)][int(j/z)].c2*0.5;
-					curmap[(i*zw+j)*3+2]=(int)nodeMatrix[int(i/z)][int(j/z)].c3*0.5;
-				}
 				if(nodeMatrix[int(i/z)][int(j/z)].drawed!=0){
 					curmap[(i*zw+j)*3]=255;
 					curmap[(i*zw+j)*3+1]=0;
 					curmap[(i*zw+j)*3+2]=0;
 				}
-				else if (nodeMatrix[int(i/z)][int(j/z)].brushed==0){
+				else{
 					curmap[(i*zw+j)*3]=nodeMatrix[int(i/z)][int(j/z)].c1;
 					curmap[(i*zw+j)*3+1]=nodeMatrix[int(i/z)][int(j/z)].c2;
 					curmap[(i*zw+j)*3+2]=nodeMatrix[int(i/z)][int(j/z)].c3;
 				}
 			}
 
-	}else{ //mode == debug
+	}else{
 		for(int i=0;i<zh;i++)
 			for(int j=0;j<zw;j++){
 				curmap[(i*zw+j)*3]=debugMatrix[int(i/z)][int(j/z)].c1;
@@ -511,7 +525,6 @@ int ISDoc::calcCostTree(int row,int col,int expand){ //return the max cost withi
 			di = x.row + dir[d][0]; dj = x.col + dir[d][1];
 			if (di<=0 || dj<=0 || di>=height-1 || dj>=width-1) continue;
 			if (nodeMatrix[di][dj].state ==EXPANDED) continue;
-			if (haveBrushed && nodeMatrix[di][dj].brushed==false) continue;
 			//if (nodeMatrix[di][dj].drawed ==true) continue;
 			if (nodeMatrix[di][dj].state == INITIAL && cnt<expand){
 				nodeMatrix[di][dj].state = ACTIVE;
@@ -577,9 +590,10 @@ void ISDoc::undo(){
 	seed=new Point;
 	(*seed)=seeds.top();
 	seeds.pop();
+	// cout<<seed->row<<" "<<seed->col<<endl;
 	curlayer--;
 	calcCostTree(seed->row,seed->col,-1);
-	if(last!=NULL)
+	if(last!=NULL)//????
 	{
 		Node* p=&nodeMatrix[last->row][last->col];
 		while( p->row!=seed->row || p->col!=seed->col )
@@ -629,5 +643,19 @@ void ISDoc::setStartSeed(int row,int col)
 	startSeed->row=row;
 }
 
+void ISDoc::setText(int row,int col)
+{
+	string output="x: ";
+	output.append(to_string(col));
+	output.append(" y: ");
+	output.append(to_string(row));
+	output.append(" R: ");
+	output.append(to_string(nodeMatrix[row][col].c1));
+	output.append(" G: ");
+	output.append(to_string(nodeMatrix[row][col].c2));
+	output.append(" B: ");
+	output.append(to_string(nodeMatrix[row][col].c3));
+	myUI->text->value(output.c_str());
+}
 
 

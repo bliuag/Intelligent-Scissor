@@ -4,14 +4,17 @@
 using namespace std;
 ISUI::ISUI(){
     Fl::scheme("gtk+");
-    // fl_register_images();    
+    // fl_register_images();   
+    menuitems[12].setonly(); 
+    menuitems[27].setonly(); 
     mainWindow = new Fl_Double_Window(600,360);
     mainWindow->user_data((void*)(this));
-    menuBar = new Fl_Menu_Bar(0,0,600,20);
-    menuBar->copy(menuitems);
-    pic= new PicView(0,20,600,340,"This is the Picture");
-    pic->box(FL_DOWN_FRAME);
-
+        menuBar = new Fl_Menu_Bar(0,0,600,20);
+        menuBar->copy(menuitems);
+        pic= new PicView(0,20,600,320,"This is the Picture");
+        pic->box(FL_DOWN_FRAME);
+        text=new Fl_Output(40,340,560,20,"Pixel");
+        text->value("start");
     mainWindow->resizable(pic);
     mainWindow->end();
 
@@ -139,27 +142,39 @@ void ISUI::cb_quit(Fl_Widget *w, void *)
 void ISUI::cb_brush(Fl_Widget *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
     if (myDoc==NULL) return;
-    myDoc->mode = WORK_MODE;
     myDoc->scissorStatus = false;
     myDoc->brushStatus = true;
 }
 void ISUI::cb_scissor(Fl_Widget *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();
     if (myDoc==NULL) return;
-    myDoc->mode = WORK_MODE;
     myDoc->scissorStatus = true;
     myDoc->brushStatus = false;
 }
-void ISUI::cb_NoBlur(Fl_Widget *w,void *){}
-void ISUI::cb_3x3(Fl_Widget *w, void *){}
-void ISUI::cb_4x4(Fl_Widget *w, void *){}
-void ISUI::cb_5x5(Fl_Widget *w, void *){}
+void ISUI::cb_NoBlur(Fl_Widget *w,void *){
+    if(whoami(w)->getDocument()->mode==DEBUG_MODE)return;
+    whoami(w)->getDocument()->initializeMatrix(-1);
+    whoami(w)->getDocument()->refreshCurmap();
+}
+void ISUI::cb_3x3(Fl_Widget *w, void *){
+    if(whoami(w)->getDocument()->mode==DEBUG_MODE)return;
+    whoami(w)->getDocument()->initializeMatrix(3);
+    whoami(w)->getDocument()->refreshCurmap();
+}
+void ISUI::cb_4x4(Fl_Widget *w, void *){
+    // whoami(w)->getDocument()->blurMatrix(4);
+}
+void ISUI::cb_5x5(Fl_Widget *w, void *){
+    // whoami(w)->getDocument()->blurMatrix(5);
+}
     
-void ISUI::cb_zoom_in(Fl_Menu_ *w, void *){
+void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
+{
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
     if (myDoc==NULL) return;
     if (myDoc->mode == DEBUG_MODE) return;
     myDoc->zoom('+');
+    cout<<"bp2";
 }
 void ISUI::cb_zoom_out(Fl_Menu_ *w, void *){
     ISDoc *myDoc=whoami(w)->getDocument();//why not use static ISDoc?
