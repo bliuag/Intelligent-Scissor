@@ -4,7 +4,9 @@
 using namespace std;
 ISUI::ISUI(){
     Fl::scheme("gtk+");
-    // fl_register_images();    
+    // fl_register_images();   
+    menuitems[12].setonly(); 
+    menuitems[27].setonly(); 
     mainWindow = new Fl_Double_Window(600,360);
     mainWindow->user_data((void*)(this));
         menuBar = new Fl_Menu_Bar(0,0,600,20);
@@ -149,10 +151,22 @@ void ISUI::cb_scissor(Fl_Widget *w, void *){
     myDoc->scissorStatus = true;
     myDoc->brushStatus = false;
 }
-void ISUI::cb_NoBlur(Fl_Widget *w,void *){}
-void ISUI::cb_3x3(Fl_Widget *w, void *){}
-void ISUI::cb_4x4(Fl_Widget *w, void *){}
-void ISUI::cb_5x5(Fl_Widget *w, void *){}
+void ISUI::cb_NoBlur(Fl_Widget *w,void *){
+    if(whoami(w)->getDocument()->mode==DEBUG_MODE)return;
+    whoami(w)->getDocument()->initializeMatrix(-1);
+    whoami(w)->getDocument()->refreshCurmap();
+}
+void ISUI::cb_3x3(Fl_Widget *w, void *){
+    if(whoami(w)->getDocument()->mode==DEBUG_MODE)return;
+    whoami(w)->getDocument()->initializeMatrix(3);
+    whoami(w)->getDocument()->refreshCurmap();
+}
+void ISUI::cb_4x4(Fl_Widget *w, void *){
+    // whoami(w)->getDocument()->blurMatrix(4);
+}
+void ISUI::cb_5x5(Fl_Widget *w, void *){
+    // whoami(w)->getDocument()->blurMatrix(5);
+}
     
 void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)
 {

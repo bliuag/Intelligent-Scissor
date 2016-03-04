@@ -78,10 +78,10 @@ public:
 	void setText(int,int);
 	bool scissorStatus;
 	bool brushStatus;
-	
-private:
-	void initializeMatrix();
+	void initializeMatrix(int);
 	void refreshCurmap();
+private:
+	
 	void calcLinkCost();
 	void initStates();
 	char imageName[256];
