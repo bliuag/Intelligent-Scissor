@@ -352,8 +352,8 @@ void ISDoc::minPath(int seedr, int seedc){
 
 }
 // ===================== End of DEBUG MODE ====================
-
 void ISDoc::initializeMatrix(int blur=-1){
+
 
 	seed=last=NULL;
 	while(!seeds.empty())
@@ -371,7 +371,6 @@ void ISDoc::initializeMatrix(int blur=-1){
 	//myUI->pic->compContour=false;
 	scissorStatus = false;
     brushStatus = false;
-    haveBrushed = false;
 	nodeMatrix = new Node*[height];
 	for (int i=0;i<height;i++)
 		nodeMatrix[i] = new Node[width];
@@ -387,7 +386,6 @@ void ISDoc::initializeMatrix(int blur=-1){
 			nodeMatrix[i][j].preNode=NULL;
 			nodeMatrix[i][j].totalCost=-1;
 			nodeMatrix[i][j].drawed=0;
-			nodeMatrix[i][j].brushed=0;
 		}
 	Node ** origin;
 	switch(blur)
@@ -416,6 +414,117 @@ void ISDoc::initializeMatrix(int blur=-1){
 					nodeMatrix[i][j].preNode=NULL;
 					nodeMatrix[i][j].totalCost=-1;
 					nodeMatrix[i][j].drawed=0;
+				}
+			break;
+		case 5:
+			origin=nodeMatrix;
+			nodeMatrix = new Node*[height];
+			for (int i=0;i<height;i++)
+				nodeMatrix[i] = new Node[width];
+			for (int i=0;i<height;i++)
+				for (int j=0;j<width;j++)
+				{
+					if(i==0||i==height-1||j==0||j==width-1)
+					{
+						nodeMatrix[i][j]=origin[i][j];
+						continue;
+					}
+					if(i<=1||i>=height-2||j<=1||j>=width-2)
+					{
+						nodeMatrix[i][j].c1=(origin[i][j].c1*2+origin[i-1][j-1].c1+origin[i-1][j].c1+origin[i-1][j+1].c1+origin[i][j-1].c1+origin[i][j+1].c1+origin[i+1][j-1].c1+origin[i+1][j].c1+origin[i+1][j+1].c1)/10;
+						nodeMatrix[i][j].c2=(origin[i][j].c2*2+origin[i-1][j-1].c2+origin[i-1][j].c2+origin[i-1][j+1].c2+origin[i][j-1].c2+origin[i][j+1].c2+origin[i+1][j-1].c2+origin[i+1][j].c2+origin[i+1][j+1].c2)/10;
+						nodeMatrix[i][j].c3=(origin[i][j].c3*2+origin[i-1][j-1].c3+origin[i-1][j].c3+origin[i-1][j+1].c3+origin[i][j-1].c3+origin[i][j+1].c3+origin[i+1][j-1].c3+origin[i+1][j].c3+origin[i+1][j+1].c3)/10;
+						nodeMatrix[i][j].row=i;
+						nodeMatrix[i][j].col=j;
+						nodeMatrix[i][j].state=INITIAL;
+						nodeMatrix[i][j].preNode=NULL;
+						nodeMatrix[i][j].totalCost=-1;
+						nodeMatrix[i][j].drawed=0;
+						continue;
+					}
+					nodeMatrix[i][j].row=i;
+					nodeMatrix[i][j].col=j;
+					nodeMatrix[i][j].state=INITIAL;
+					nodeMatrix[i][j].preNode=NULL;
+					nodeMatrix[i][j].totalCost=-1;
+					nodeMatrix[i][j].drawed=0;
+					int c1=0,c2=0,c3=0;
+					for(int k=-2;k<=2;k++)
+						for(int l=-2;l<=2;l++)
+						{
+							c1+=origin[i+k][j+l].c1;
+							c2+=origin[i+k][j+l].c2;
+							c3+=origin[i+k][j+l].c3;
+						}
+					for(int k=-1;k<=1;k++)
+						for(int l=-1;l<=1;l++)
+						{
+							c1+=origin[i+k][j+l].c1;
+							c2+=origin[i+k][j+l].c2;
+							c3+=origin[i+k][j+l].c3;
+						}
+					nodeMatrix[i][j].c1=(origin[i][j].c1+c1)/35;
+					nodeMatrix[i][j].c2=(origin[i][j].c2+c2)/35;
+					nodeMatrix[i][j].c3=(origin[i][j].c3+c3)/35;
+				}
+			break;
+		case 7:
+			origin=nodeMatrix;
+			nodeMatrix = new Node*[height];
+			for (int i=0;i<height;i++)
+				nodeMatrix[i] = new Node[width];
+			for (int i=0;i<height;i++)
+				for (int j=0;j<width;j++)
+				{
+					if(i==0||i==height-1||j==0||j==width-1)
+					{
+						nodeMatrix[i][j]=origin[i][j];
+						continue;
+					}
+					if(i<=2||i>=height-3||j<=2||j>=width-3)
+					{
+						nodeMatrix[i][j].c1=(origin[i][j].c1*2+origin[i-1][j-1].c1+origin[i-1][j].c1+origin[i-1][j+1].c1+origin[i][j-1].c1+origin[i][j+1].c1+origin[i+1][j-1].c1+origin[i+1][j].c1+origin[i+1][j+1].c1)/10;
+						nodeMatrix[i][j].c2=(origin[i][j].c2*2+origin[i-1][j-1].c2+origin[i-1][j].c2+origin[i-1][j+1].c2+origin[i][j-1].c2+origin[i][j+1].c2+origin[i+1][j-1].c2+origin[i+1][j].c2+origin[i+1][j+1].c2)/10;
+						nodeMatrix[i][j].c3=(origin[i][j].c3*2+origin[i-1][j-1].c3+origin[i-1][j].c3+origin[i-1][j+1].c3+origin[i][j-1].c3+origin[i][j+1].c3+origin[i+1][j-1].c3+origin[i+1][j].c3+origin[i+1][j+1].c3)/10;
+						nodeMatrix[i][j].row=i;
+						nodeMatrix[i][j].col=j;
+						nodeMatrix[i][j].state=INITIAL;
+						nodeMatrix[i][j].preNode=NULL;
+						nodeMatrix[i][j].totalCost=-1;
+						nodeMatrix[i][j].drawed=0;
+						continue;
+					}
+					nodeMatrix[i][j].row=i;
+					nodeMatrix[i][j].col=j;
+					nodeMatrix[i][j].state=INITIAL;
+					nodeMatrix[i][j].preNode=NULL;
+					nodeMatrix[i][j].totalCost=-1;
+					nodeMatrix[i][j].drawed=0;
+					int c1=0,c2=0,c3=0;
+					for(int k=-3;k<=3;k++)
+						for(int l=-3;l<=3;l++)
+						{
+							c1+=origin[i+k][j+l].c1;
+							c2+=origin[i+k][j+l].c2;
+							c3+=origin[i+k][j+l].c3;
+						}
+					for(int k=-2;k<=2;k++)
+						for(int l=-2;l<=2;l++)
+						{
+							c1+=origin[i+k][j+l].c1;
+							c2+=origin[i+k][j+l].c2;
+							c3+=origin[i+k][j+l].c3;
+						}
+					for(int k=-1;k<=1;k++)
+						for(int l=-1;l<=1;l++)
+						{
+							c1+=origin[i+k][j+l].c1;
+							c2+=origin[i+k][j+l].c2;
+							c3+=origin[i+k][j+l].c3;
+						}
+					nodeMatrix[i][j].c1=(origin[i][j].c1+c1)/84;
+					nodeMatrix[i][j].c2=(origin[i][j].c2+c2)/84;
+					nodeMatrix[i][j].c3=(origin[i][j].c3+c3)/84;
 				}
 			break;
 		default:

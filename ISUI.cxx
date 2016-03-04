@@ -49,8 +49,8 @@ Fl_Menu_Item ISUI::menuitems[]=
             {"Blur",        FL_CTRL+'r',0,0,FL_SUBMENU},
                 {"No blurring",     0,(Fl_Callback *)ISUI::cb_NoBlur,0,FL_MENU_RADIO},
                 {"3x3",     0,(Fl_Callback *)ISUI::cb_3x3,0,FL_MENU_RADIO},
-                {"4x4",     0,(Fl_Callback *)ISUI::cb_4x4,0,FL_MENU_RADIO},
                 {"5x5",     0,(Fl_Callback *)ISUI::cb_5x5,0,FL_MENU_RADIO},
+                {"7x7",     0,(Fl_Callback *)ISUI::cb_7x7,0,FL_MENU_RADIO},
                 {0},
             {"Zoom in",     FL_CTRL+'[',(Fl_Callback *)ISUI::cb_zoom_in,0,0},
             {"Zoom out",    FL_CTRL+']',(Fl_Callback *)ISUI::cb_zoom_out,0,0},
@@ -163,11 +163,15 @@ void ISUI::cb_3x3(Fl_Widget *w, void *){
     whoami(w)->getDocument()->initializeMatrix(3);
     whoami(w)->getDocument()->refreshCurmap();
 }
-void ISUI::cb_4x4(Fl_Widget *w, void *){
-    // whoami(w)->getDocument()->blurMatrix(4);
-}
 void ISUI::cb_5x5(Fl_Widget *w, void *){
-    // whoami(w)->getDocument()->blurMatrix(5);
+    if(whoami(w)->getDocument()->mode==DEBUG_MODE)return;
+    whoami(w)->getDocument()->initializeMatrix(5);
+    whoami(w)->getDocument()->refreshCurmap();
+}
+void ISUI::cb_7x7(Fl_Widget *w, void *){
+    if(whoami(w)->getDocument()->mode==DEBUG_MODE)return;
+    whoami(w)->getDocument()->initializeMatrix(7);
+    whoami(w)->getDocument()->refreshCurmap();
 }
     
 void ISUI::cb_zoom_in(Fl_Menu_ *w, void *)

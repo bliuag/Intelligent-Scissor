@@ -52,7 +52,7 @@ private:
 	static void cb_scissor(Fl_Widget *w, void *);
 	static void cb_NoBlur(Fl_Widget *w, void *);
 	static void cb_3x3(Fl_Widget *w, void *);
-	static void cb_4x4(Fl_Widget *w, void *);
+	static void cb_7x7(Fl_Widget *w, void *);
 	static void cb_5x5(Fl_Widget *w, void *);
 
 	static void cb_zoom_in(Fl_Menu_ *w, void *);
