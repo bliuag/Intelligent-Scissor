@@ -58,7 +58,6 @@ int ISDoc::loadImage(const char* picName){
 	initializeMatrix(-1);
 	refreshCurmap();
 	myUI->pic->show();
-	
 	//calcCostTree(1,1,-1);
 	
 	// int l=width*height*3;
@@ -275,7 +274,6 @@ void ISDoc::costGraph(){
 	delete debugMatrix;
 }
 
-
 void ISDoc::pathTree(int seedr, int seedc, int expand){
 	mode = DEBUG_MODE;
 	debugMatrix = new Color*[3*height];
@@ -353,8 +351,6 @@ void ISDoc::minPath(int seedr, int seedc){
 }
 // ===================== End of DEBUG MODE ====================
 void ISDoc::initializeMatrix(int blur=-1){
-
-
 	seed=last=NULL;
 	while(!seeds.empty())
 		seeds.pop();
@@ -371,6 +367,8 @@ void ISDoc::initializeMatrix(int blur=-1){
 	//myUI->pic->compContour=false;
 	scissorStatus = false;
     brushStatus = false;
+    haveBrushed=false;
+
 	nodeMatrix = new Node*[height];
 	for (int i=0;i<height;i++)
 		nodeMatrix[i] = new Node[width];
@@ -386,10 +384,10 @@ void ISDoc::initializeMatrix(int blur=-1){
 			nodeMatrix[i][j].preNode=NULL;
 			nodeMatrix[i][j].totalCost=-1;
 			nodeMatrix[i][j].drawed=0;
+			nodeMatrix[i][j].brushed=false;
 		}
 	Node ** origin;
-	switch(blur)
-	{
+	switch(blur){
 		case -1:
 			break;
 		case 3:
@@ -414,6 +412,7 @@ void ISDoc::initializeMatrix(int blur=-1){
 					nodeMatrix[i][j].preNode=NULL;
 					nodeMatrix[i][j].totalCost=-1;
 					nodeMatrix[i][j].drawed=0;
+					nodeMatrix[i][j].brushed=0;
 				}
 			break;
 		case 5:
@@ -440,6 +439,7 @@ void ISDoc::initializeMatrix(int blur=-1){
 						nodeMatrix[i][j].preNode=NULL;
 						nodeMatrix[i][j].totalCost=-1;
 						nodeMatrix[i][j].drawed=0;
+						nodeMatrix[i][j].brushed=0;
 						continue;
 					}
 					nodeMatrix[i][j].row=i;
@@ -448,6 +448,7 @@ void ISDoc::initializeMatrix(int blur=-1){
 					nodeMatrix[i][j].preNode=NULL;
 					nodeMatrix[i][j].totalCost=-1;
 					nodeMatrix[i][j].drawed=0;
+					nodeMatrix[i][j].brushed=0;
 					int c1=0,c2=0,c3=0;
 					for(int k=-2;k<=2;k++)
 						for(int l=-2;l<=2;l++)
@@ -492,6 +493,7 @@ void ISDoc::initializeMatrix(int blur=-1){
 						nodeMatrix[i][j].preNode=NULL;
 						nodeMatrix[i][j].totalCost=-1;
 						nodeMatrix[i][j].drawed=0;
+						nodeMatrix[i][j].brushed=0;
 						continue;
 					}
 					nodeMatrix[i][j].row=i;
@@ -500,6 +502,7 @@ void ISDoc::initializeMatrix(int blur=-1){
 					nodeMatrix[i][j].preNode=NULL;
 					nodeMatrix[i][j].totalCost=-1;
 					nodeMatrix[i][j].drawed=0;
+					nodeMatrix[i][j].brushed=0;
 					int c1=0,c2=0,c3=0;
 					for(int k=-3;k<=3;k++)
 						for(int l=-3;l<=3;l++)

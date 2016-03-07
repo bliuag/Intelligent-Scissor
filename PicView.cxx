@@ -72,31 +72,38 @@ void PicView::refresh()
 
 int PicView::handle(int event)
 {
+	int rx,ry;
 	switch(event){
 	case FL_PUSH:
-		if (Fl::event_y()<=1 || Fl::event_y()/myDoc->z >= myDoc->height-2 || Fl::event_x()<=1 || Fl::event_x()/myDoc->z >= myDoc->width-2) break;
+		rx = Fl::event_y()/myDoc->z; ry = Fl::event_x()/myDoc->z;
+		if (rx<=0 || rx >= myDoc->height-1 || ry<=0 || ry >= myDoc->width-1) break;
 		if (myDoc->mode!=WORK_MODE) break;
 		if (myDoc->scissorStatus && contour!=2){
-			if (myDoc->haveBrushed && myDoc->nodeMatrix[myDoc->height - int((Fl::event_y())/myDoc->z) -1][int(Fl::event_x()/myDoc->z)].brushed==false) break;
+			if (myDoc->haveBrushed && myDoc->nodeMatrix [myDoc->height-rx-1][ry].brushed==false) break;
 			if (contour==0)
-				myDoc->setStartSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
-			myDoc->setSeed(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+				myDoc->setStartSeed(myDoc->height -rx-1,ry);
+			myDoc->setSeed(myDoc->height-rx-1,ry);
 			contour=1;
 		}
 		flush();
 		break;
 	case FL_MOVE:
-		if (Fl::event_y()<=1 || Fl::event_y()/myDoc->z >= myDoc->height-2 || Fl::event_x()<=1 || Fl::event_x()/myDoc->z >= myDoc->width-2) break;
-		if (myDoc->haveBrushed && myDoc->nodeMatrix[myDoc->height - int((Fl::event_y())/myDoc->z) -1][int(Fl::event_x()/myDoc->z)].brushed==false) break;
-		myDoc->setText(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+		rx = Fl::event_y()/myDoc->z; ry = Fl::event_x()/myDoc->z;
+		if (rx < 0 || rx >= myDoc->height || ry < 0 || ry >= myDoc->width) break;
+		myDoc->setText(myDoc->height -rx-1,ry);
+		if (rx <= 0 || rx >= myDoc->height-1 || ry <= 0 || ry >= myDoc->width-1) break;
+		if (myDoc->haveBrushed && 
+			 myDoc->nodeMatrix[myDoc->height-rx-1][ry].brushed==false) break;
+		
 		if(/*compContour==false && */myDoc->scissorStatus && contour==1 && myDoc->mode==WORK_MODE){
-			myDoc->drawContour(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+			myDoc->drawContour(myDoc->height-rx-1,ry);
 		}
 		break;
 	case FL_DRAG:
-		if (Fl::event_y()<=1 || Fl::event_y()/myDoc->z >= myDoc->height-2 || Fl::event_x()<=1 || Fl::event_x()/myDoc->z >= myDoc->width-2) break;
+		rx = Fl::event_y()/myDoc->z; ry = Fl::event_x()/myDoc->z;
+		if (rx<=0 || rx >= myDoc->height-1 || ry<=0 || ry >= myDoc->width-1) break;
 		if (myDoc->brushStatus && myDoc->mode==WORK_MODE){
-			myDoc->drawBrush(myDoc->height - (Fl::event_y())/myDoc->z -1,Fl::event_x()/myDoc->z);
+			myDoc->drawBrush(myDoc->height-rx-1,ry);
 		}
 		break;
 	case FL_ENTER:
