@@ -2,14 +2,53 @@
 <html lang="en">
   <head>
     <title>The Intelligent Scissor</title>
-  
+  	<style>
+  		
+		p {
+		    text-indent: 50px;
+		}
+	</style>
   </head>
 
   <body>
     <h1> The Intelligent Scissor</h1>
+    <div class="intro">
+    	Presented by LIU Boyu and YAN Rui for COMP 5421 in Spring, 2016.
+    </div>
    
-    <h4> Have to press Edit->Scissor in order to start scissoring.</h4> 
-    
+   
+   	<h2> How to use? </h2>
+   		<div>
+   			<p>-	<strong>CTRL+'['</strong>: Zoom out</p>
+   			<p>-	<strong>CTRL+']'</strong>: Zoom in</p>
+   			<p>-	<strong>CTRL+'o'</strong>: Open</p>
+   			<p>-	<strong>CTRL+'c'</strong>: Save Contour</p>
+   			<p>-	<strong>CTRL+'m'</strong>: Save Mask</p>
+   			<p>-	<strong>CTRL+'q'</strong>: Quit</p>
+
+   			<p>-	<strong>CTRL+'b'</strong>: Brush</p>
+   			<p>-	<strong>CTRL+'s'</strong>: Scissor</p>
+
+   			<p>-	<strong>'.'</strong>: Finish Contour</p>
+   			<p>-	<strong>CTRL+'.'</strong>: Finish Closed Contour</p>
+   			<p>-	<strong>CTRL+'z'</strong>: Undo</p>
+
+   		</div>
+
+
+   		<div>
+
+   		<h2> Notes </h2>
+		   	<p> -	If brush is needed, press <strong>Edit --> Scissor</strong> then drag along with the mouse on the canvas. </p>
+		    <p> -	Press <strong>Edit-->Scissor</strong> in order to start scissoring(after using the brush or not).</p> 
+		    <p> -	After using brush and scissor, when clicking <strong>Image Only</strong>, the original image will be shown while after clicking <strong>Image with Contour</strong>, the canvas with brush and contour will appear again.</p>
+		    <p> -	The <strong>Path Tree</strong> and <strong> Min Path</strong> function can only be used with at least one seed is settled.</p>
+		</div>
+
+		<h2>Extra credit features</h2>
+			<p> - The brush function is implemented as instructions.
+			<p> - Blur in 3x3, 5x5 and 7x7 pixel. 
+			<p>	<strong>Observation:</strong> It will makes the selections of hard edges more difficult, while enables the delicate part (e.g hair and fur) easier to select.
     
   </body>
 </html>

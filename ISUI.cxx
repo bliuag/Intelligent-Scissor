@@ -200,8 +200,6 @@ void ISUI::cb_Image_Contour(Fl_Menu_ *w, void *){
 
 void ISUI::cb_finish(Fl_Menu_ *w, void *){
     whoami(w)->getDocument()->stopContour();
-    //cout<<whoami(w)->pic->contour<<endl;
-    //exit(0);
 }
 
 void ISUI::cb_finishClosed(Fl_Menu_ *w, void *){
