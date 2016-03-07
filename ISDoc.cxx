@@ -642,7 +642,6 @@ int ISDoc::calcCostTree(int row,int col,int expand){ //return the max cost withi
 		expand = width*height;
 
 	initStates();
-	cout << "seed: "<<row << " " << col << endl;
 	cnt++;
 	q.push(nodeMatrix[row][col]);
 	nodeMatrix[row][col].state = ACTIVE; 
@@ -701,6 +700,7 @@ void ISDoc::undo(){
 	if(seeds.empty()){
 		myUI->pic->contour=0;
 		//myUI->pic->compContour=false;
+		seed=NULL;
 		refreshCurmap();
 		return;
 	}
@@ -720,7 +720,6 @@ void ISDoc::undo(){
 	seed=new Point;
 	(*seed)=seeds.top();
 	seeds.pop();
-	// cout<<seed->row<<" "<<seed->col<<endl;
 	curlayer--;
 	calcCostTree(seed->row,seed->col,-1);
 	if(last!=NULL)//????
